@@ -7,8 +7,6 @@ div .react-select-dropdown__control {
     min-height: 36px;
     border-color: rgb(204, 204, 204);
     box-shadow: none;
-    height: 36px;
-    display: table;
     width: 100%;
 }
 
@@ -17,14 +15,12 @@ div .react-select-dropdown__control:hover {
 }
 
 div .react-select-dropdown__indicators {
-    display: table-cell;
-    position: absolute;
-    right: 0;
-    top: 0;
-    vertical-align: middle;
-    padding: 0;
 }
 
 div .react-select-dropdown__indicator {
     color: #999;
+}
+
+div .react-select-dropdown__menu-list {
+    padding: 0;
 }

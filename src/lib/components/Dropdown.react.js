@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Select, { components, DropdownIndicatorProps, IndicatorSeparatorProps } from 'react-select';
 import PropTypes from 'prop-types';
-import { MdArrowRight, MdArrowDropDown, MdEdit, MdBarChart } from "react-icons/md";
+import { MdArrowDropUp, MdArrowDropDown } from "react-icons/md";
+import chroma from 'chroma-js';
 
 
 const IndicatorSeparator = ({
@@ -10,14 +11,36 @@ const IndicatorSeparator = ({
   return null;
 };
 
-const DropdownIndicator = (
-  props
-) => {
-  return (
-    <components.DropdownIndicator {...props}>
-      <MdArrowDropDown label="Arrow" size='25px' />
-    </components.DropdownIndicator>
-  );
+const DropdownIndicator = (props) => (
+  <components.DropdownIndicator {...props}>
+    {props.isFocused ? (
+      <MdArrowDropUp label="Arrow" size="25px" />
+    ) : (
+      <MdArrowDropDown label="Arrow" size="25px" />
+    )}
+  </components.DropdownIndicator>
+);
+
+const colorStyles = {
+  multiValue: (styles, { data }) => {
+    return {
+      ...styles,
+      backgroundColor: 'rgba(0, 50, 153, 0.05)', // Use the value for the background color
+    };
+  },
+  multiValueLabel: (styles, { data }) => ({
+    ...styles,
+    color: "rgba(0, 50, 153, 1)", // Set the text color
+  }),
+  multiValueRemove: (styles, { data }) => ({
+    ...styles,
+    color: "rgba(0, 50, 153, 1)",
+    backgroundColor: 'rgba(0, 50, 153, 0.1)',
+    ':hover': {
+      backgroundColor: 'rgba(0, 50, 153, 1)',
+      color: 'white',
+    },
+  }),
 };
 
 class Dropdown extends Component {
@@ -78,6 +101,7 @@ class Dropdown extends Component {
                     className={this.props.className}
                     classNamePrefix='react-select-dropdown'
                     components={{ DropdownIndicator, IndicatorSeparator }}
+                    styles={colorStyles}
                 />
             </div>
         );
