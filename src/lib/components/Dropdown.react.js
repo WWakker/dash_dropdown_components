@@ -83,11 +83,6 @@ class Dropdown extends Component {
 
     render() {
 
-        const sanitizedOptions = sanitizeOptions(this.props.options)
-        const sanitizedValue = sanitizeValue(this.props.value, this.props.multi, sanitizedOptions)
-
-        console.log(sanitizedValue)
-
         return (
              <div
                 id={this.props.id}
@@ -96,8 +91,8 @@ class Dropdown extends Component {
             >
                 <Select
                     isMulti={this.props.multi}
-                    options={sanitizedOptions}
-                    value={sanitizedValue}
+                    options={sanitizeOptions(this.props.options)}
+                    value={sanitizeValue(this.props.value, this.props.multi, sanitizedOptions)}
                     onChange={this.handleChange}
                     placeholder={this.props.placeholder}
                     isDisabled={this.props.disabled}
