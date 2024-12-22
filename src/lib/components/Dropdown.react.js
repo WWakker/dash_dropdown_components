@@ -49,10 +49,6 @@ const colorStyles = {
 class Dropdown extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            value: this.props.value
-        }
-
         this.handleChange = this.handleChange.bind(this);
     }
 
