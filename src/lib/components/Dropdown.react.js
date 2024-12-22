@@ -43,6 +43,9 @@ const colorStyles = {
   }),
 };
 
+/**
+ * A dropdown similar to dcc.Dropdown, where the menu stays open when multi=true and a selection is made
+ */
 class Dropdown extends Component {
     constructor(props) {
         super(props);
@@ -116,7 +119,15 @@ class Dropdown extends Component {
 
 // PropTypes to enforce prop validation
 Dropdown.propTypes = {
+    /**
+     * The ID of this component, used to identify dash components
+     * in callbacks. The ID needs to be unique across all of the
+     * components in an app.
+     */
     id: PropTypes.string,
+    /**
+     * An array of options {label: [string|number], value: [string|number]},
+     */
     options: PropTypes.oneOfType([
         /**
          * Array of options where the label and the value are the same thing - [string|number|bool]
@@ -200,17 +211,40 @@ Dropdown.propTypes = {
             ])
         ),
     ]),
+    /**
+     * If true, the user can select multiple values
+     */
     multi: PropTypes.bool,
+    /**
+     * A placeholder in the dropdown input if no selection is made yet; default is 'Select...'
+     */
     placeholder: PropTypes.string,
+    /**
+     * If true, this dropdown is disabled and the selection cannot be changed.
+     */
     disabled: PropTypes.bool,
+    /**
+     * Whether to enable the searching feature or not
+     */
     searchable: PropTypes.bool,
+    /**
+     * Whether or not the dropdown is "clearable", that is, whether or
+     * not a small "x" appears on the right of the dropdown that removes
+     * the selected value.
+     */
     clearable: PropTypes.bool,
     /**
      * Dash-assigned callback that should be called to report property changes
      * to Dash, to make them available for callbacks.
      */
     setProps: PropTypes.func,
+    /**
+     * Defines CSS styles which will override styles previously set.
+     */
     style: PropTypes.object,
+    /**
+     * className of the dropdown element
+     */
     className: PropTypes.string,
 };
 

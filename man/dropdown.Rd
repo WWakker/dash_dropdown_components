@@ -6,7 +6,7 @@
 \title{Dropdown component}
 
 \description{
-
+A dropdown similar to dcc.Dropdown, where the menu stays open when multi=true and a selection is made
 }
 
 \usage{
@@ -16,15 +16,19 @@ style=NULL, value=NULL)
 }
 
 \arguments{
-\item{id}{Character. }
+\item{id}{Character. The ID of this component, used to identify dash components
+in callbacks. The ID needs to be unique across all of the
+components in an app.}
 
-\item{className}{Character. }
+\item{className}{Character. className of the dropdown element}
 
-\item{clearable}{Logical. }
+\item{clearable}{Logical. Whether or not the dropdown is "clearable", that is, whether or
+not a small "x" appears on the right of the dropdown that removes
+the selected value.}
 
-\item{disabled}{Logical. }
+\item{disabled}{Logical. If true, this dropdown is disabled and the selection cannot be changed.}
 
-\item{multi}{Logical. }
+\item{multi}{Logical. If true, the user can select multiple values}
 
 \item{options}{List of character | numeric | logicals | named list | list of lists containing elements 'label', 'value', 'disabled', 'title', 'search'.
 those elements have the following types:
@@ -39,13 +43,13 @@ see https://developer.mozilla.org/en-us/docs/web/html/global_attributes/title
   - search (character; optional): optional search value for the option, to use if the label
 is a component or provide a custom search value different
 from the label. if no search value and the label is a
-component, the `value` will be used for search.s. }
+component, the `value` will be used for search.s. An array of options {label: [string|number], value: [string|number]},}
 
-\item{placeholder}{Character. }
+\item{placeholder}{Character. A placeholder in the dropdown input if no selection is made yet; default is 'Select...'}
 
-\item{searchable}{Logical. }
+\item{searchable}{Logical. Whether to enable the searching feature or not}
 
-\item{style}{Named list. }
+\item{style}{Named list. Defines CSS styles which will override styles previously set.}
 
 \item{value}{Character | numeric | logical | list of character | numeric | logicals. The value of the input. If `multi` is false (the default)
 then value is just a string that corresponds to the values

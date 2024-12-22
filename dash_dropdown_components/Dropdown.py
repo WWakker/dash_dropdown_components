@@ -5,21 +5,33 @@ from dash.development.base_component import Component, _explicitize_args
 
 class Dropdown(Component):
     """A Dropdown component.
-
+A dropdown similar to dcc.Dropdown, where the menu stays open when multi=true and a selection is made
 
 Keyword arguments:
 
-- id (string; optional)
+- id (string; optional):
+    The ID of this component, used to identify dash components in
+    callbacks. The ID needs to be unique across all of the components
+    in an app.
 
-- className (string; optional)
+- className (string; optional):
+    className of the dropdown element.
 
-- clearable (boolean; default True)
+- clearable (boolean; default True):
+    Whether or not the dropdown is \"clearable\", that is, whether or
+    not a small \"x\" appears on the right of the dropdown that
+    removes the selected value.
 
-- disabled (boolean; default False)
+- disabled (boolean; default False):
+    If True, this dropdown is disabled and the selection cannot be
+    changed.
 
-- multi (boolean; default False)
+- multi (boolean; default False):
+    If True, the user can select multiple values.
 
-- options (list of dicts; optional)
+- options (list of dicts; optional):
+    An array of options {label: [string|number], value:
+    [string|number]},.
 
     `options` is a list of string | number | booleans | dict | list of
     dicts with keys:
@@ -46,11 +58,15 @@ Keyword arguments:
         label. If no search value and the label is a component, the
         `value` will be used for search.
 
-- placeholder (string; default 'Select...')
+- placeholder (string; default 'Select...'):
+    A placeholder in the dropdown input if no selection is made yet;
+    default is 'Select...'.
 
-- searchable (boolean; default True)
+- searchable (boolean; default True):
+    Whether to enable the searching feature or not.
 
-- style (dict; optional)
+- style (dict; optional):
+    Defines CSS styles which will override styles previously set.
 
 - value (string | number | boolean | list of string | number | booleans; optional):
     The value of the input. If `multi` is False (the default) then
