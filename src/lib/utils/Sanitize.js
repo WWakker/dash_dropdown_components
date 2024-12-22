@@ -27,9 +27,7 @@ export const sanitizeOptions = options => {
 
 export const sanitizeValue = (value, multi, sanitizedOptions) => {
 
-    const valueLabelMapping = sanitizedOptions.reduce((acc, { value, label }) => (acc[value] = label, acc), {});
-
-    let return_value
+    let return_value;
 
     if (isNil(value)) {
         return_value = multi ? []: null;
@@ -39,5 +37,5 @@ export const sanitizeValue = (value, multi, sanitizedOptions) => {
         return_value = sanitizedOptions.filter(option => option.value === value);
     };
 
-    return return_value
+    return return_value;
 }

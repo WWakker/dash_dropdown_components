@@ -7,12 +7,12 @@ options = [
     {'value': 'banana', 'label': 'Banana'},
     {'value': 'apple', 'label': 'Apple'},
     {'value': 'strawberry', 'label': 'Strawberry'},
-    {'value': 'banana2', 'label': 'Banana'},
-    {'value': 'apple2', 'label': 'Apple'},
-    {'value': 'strawberry2', 'label': 'Strawberry'},
-    {'value': 'banana3', 'label': 'Banana'},
-    {'value': 'apple3', 'label': 'Apple'},
-    {'value': 'strawberry3', 'label': 'Strawberry'},
+    {'value': 'kiwi', 'label': 'Kiwi'},
+    {'value': 'orange', 'label': 'Orange'},
+    {'value': 'blueberry', 'label': 'Blueberry'},
+    {'value': 'lemon', 'label': 'Lemon'},
+    {'value': 'lime', 'label': 'Lime'},
+    {'value': 'mandarin', 'label': 'Mandarin'},
 ]
 
 app.layout = html.Div(
@@ -40,12 +40,12 @@ html.Div([
                        value=False),
         dash_dropdown_components.Dropdown(
             id='input2',
-            options=[x['value'] for x in options],
-            #value=options[0]['value'],
+            options=options,
+            value=options[0]['value'],
             multi=False,
             clearable=False,
             disabled=False,
-            searchable=False
+            searchable=True
         ),
         html.Div(id='output2')
     ], style={'width': '50%', 'display': 'inline-block'})
