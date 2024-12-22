@@ -1,9 +1,53 @@
-import React, { Component } from 'react';
-import Select, { components, DropdownIndicatorProps, IndicatorSeparatorProps } from 'react-select';
+import React, { Component, MouseEventHandler } from 'react';
+import Select, { components, MultiValueGenericProps, MultiValueProps, OnChangeValue, Props, DropdownIndicatorProps, IndicatorSeparatorProps } from 'react-select';
+import {
+  SortableContainer,
+  SortableContainerProps,
+  SortableElement,
+  SortEndHandler,
+  SortableHandle,
+} from 'react-sortable-hoc';
 import PropTypes from 'prop-types';
 import { MdArrowDropUp, MdArrowDropDown } from "react-icons/md";
 import { sanitizeOptions, sanitizeValue } from '../utils/Sanitize'
 import {isNil, pluck, without, pick} from 'ramda';
+
+const arrayMove = (array, from, to) => {
+    if (!Array.isArray(array)) {
+        if (isNil(array)) {
+            return []
+        } else {
+            return [array]
+        }
+    }
+    const slicedArray = array.slice();
+    // Remove the item from the starting index
+    const [movedItem] = slicedArray.splice(from, 1);
+    // Insert the item at the ending index
+    slicedArray.splice(to, 0, movedItem);
+
+  return slicedArray;
+}
+
+const SortableMultiValue = SortableElement( (props) => {
+    // this prevents the menu from being opened/closed when the user clicks
+    // on a value to begin dragging it. ideally, detecting a click (instead of
+    // a drag) would still focus the control and toggle the menu, but that
+    // requires some magic with refs that are out of scope for this example
+    const onMouseDown = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+    const innerProps = { ...props.innerProps, onMouseDown };
+    return <components.MultiValue {...props} innerProps={innerProps} />;
+  }
+);
+
+const SortableMultiValueLabel = SortableHandle(
+  (props) => <components.MultiValueLabel {...props} />
+);
+
+const SortableSelect = SortableContainer(Select)
 
 const IndicatorSeparator = ({
   innerProps,
@@ -75,9 +119,17 @@ class Dropdown extends Component {
         };
 
         setProps({ value: return_value });
-    }
+    };
+
+    onSortEnd = ({oldIndex, newIndex}) => {
+        const { multi, setProps, value } = this.props;
+        const newValue = arrayMove(value, oldIndex, newIndex);
+        setProps({ value: newValue });
+      };
 
     render() {
+
+        const sanitizedOptions = sanitizeOptions(this.props.options)
 
         return (
              <div
@@ -85,9 +137,14 @@ class Dropdown extends Component {
                 className="dash-dropdown"
                 style={this.props.style}
             >
-                <Select
+                <SortableSelect
+                    useDragHandle
+                    axis='xy'
+                    onSortEnd={this.onSortEnd}
+                    distance={4}
+                    getHelperDimensions={({ node }) => node.getBoundingClientRect()}
                     isMulti={this.props.multi}
-                    options={sanitizeOptions(this.props.options)}
+                    options={sanitizedOptions}
                     value={sanitizeValue(this.props.value, this.props.multi, sanitizedOptions)}
                     onChange={this.handleChange}
                     placeholder={this.props.placeholder}
@@ -100,7 +157,12 @@ class Dropdown extends Component {
                     deleteRemoves={this.props.clearable}
                     className={this.props.className}
                     classNamePrefix='react-select-dropdown'
-                    components={{ DropdownIndicator, IndicatorSeparator }}
+                    components={{
+                        DropdownIndicator,
+                        IndicatorSeparator,
+                        MultiValue: SortableMultiValue,
+                        MultiValueLabel: SortableMultiValueLabel
+                    }}
                     styles={colorStyles}
                 />
             </div>

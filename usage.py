@@ -9,7 +9,7 @@ options = [
     {'value': 'strawberry', 'label': 'Strawberry'},
     {'value': 'kiwi', 'label': 'Kiwi'},
     {'value': 'orange', 'label': 'Orange'},
-    {'value': 'blueberry', 'label': 'Blueberry'},
+    {'value': 'blueberry', 'label': 'Blueberry Blueberry Blueberry Blueberry Blueberry Blueberry Blueberry Blueberry Blueberry'},
     {'value': 'lemon', 'label': 'Lemon'},
     {'value': 'lime', 'label': 'Lime'},
     {'value': 'mandarin', 'label': 'Mandarin'},

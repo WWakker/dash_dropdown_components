@@ -30,9 +30,12 @@ export const sanitizeValue = (value, multi, sanitizedOptions) => {
     let return_value;
 
     if (isNil(value)) {
-        return_value = multi ? []: null;
+        return_value = multi ? [] : null;
     } else if (Array.isArray(value)) {
-        return_value = sanitizedOptions.filter(option => value.includes(option.value));
+        return_value = (sanitizedOptions
+        .filter(option => value.includes(option.value))
+        .sort((a, b) => value.indexOf(a.value) - value.indexOf(b.value))
+        );
     } else {
         return_value = sanitizedOptions.filter(option => option.value === value);
     };
