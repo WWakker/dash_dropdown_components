@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import Select, { components, DropdownIndicatorProps, IndicatorSeparatorProps } from 'react-select';
 import PropTypes from 'prop-types';
 import { MdArrowDropUp, MdArrowDropDown } from "react-icons/md";
-import chroma from 'chroma-js';
-
+import { sanitizeOptions, sanitizeValue } from '../utils/Sanitize'
+import {isNil, pluck, without, pick} from 'ramda';
 
 const IndicatorSeparator = ({
   innerProps,
@@ -54,30 +54,36 @@ class Dropdown extends Component {
     }
 
     /**
-     * Format the value to match react-select's expected structure.
-     */
-     /**
-    formatValue(value) {
-        const { multi } = this.props;
-        if (multi) {
-            return Array.isArray(value) ? value.map(v => ({ value: v, label: v })) : [];
-        }
-        return value ? { value, label: value } : null;
-    }
-    */
-
-
-    /**
      * Handle the value change and communicate it to Dash via setProps.
      */
     handleChange = (selectedOption) => {
-        console.log(selectedOption)
         const { multi, setProps } = this.props;
 
-        setProps({ value: selectedOption });
+        let return_value;
+
+        if (multi) {
+                if (isNil(selectedOption)) {
+                    return_value = [];
+                } else {
+                    return_value = pluck('value', selectedOption);
+                }
+        } else {
+            if (isNil(selectedOption)) {
+                return_value = null;
+            } else {
+                return_value = selectedOption.value;
+            }
+        };
+
+        setProps({ value: return_value });
     }
 
     render() {
+
+        const sanitizedOptions = sanitizeOptions(this.props.options)
+        const sanitizedValue = sanitizeValue(this.props.value, this.props.multi, sanitizedOptions)
+
+        console.log(sanitizedValue)
 
         return (
              <div
@@ -87,8 +93,8 @@ class Dropdown extends Component {
             >
                 <Select
                     isMulti={this.props.multi}
-                    options={this.props.options}
-                    value={this.props.value}
+                    options={sanitizedOptions}
+                    value={sanitizedValue}
                     onChange={this.handleChange}
                     placeholder={this.props.placeholder}
                     isDisabled={this.props.disabled}
@@ -111,23 +117,88 @@ class Dropdown extends Component {
 // PropTypes to enforce prop validation
 Dropdown.propTypes = {
     id: PropTypes.string,
-    options: PropTypes.arrayOf(
-        PropTypes.shape({
-            value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-            label: PropTypes.string,
-        })
-    ).isRequired,
-    value: PropTypes.oneOfType([
+    options: PropTypes.oneOfType([
+        /**
+         * Array of options where the label and the value are the same thing - [string|number|bool]
+         */
         PropTypes.arrayOf(
-            PropTypes.shape({
-                value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-                label: PropTypes.string,
+            PropTypes.oneOfType([
+                PropTypes.string,
+                PropTypes.number,
+                PropTypes.bool,
+            ])
+        ),
+        /**
+         * Simpler `options` representation in dictionary format. The order is not guaranteed.
+         * {`value1`: `label1`, `value2`: `label2`, ... }
+         * which is equal to
+         * [{label: `label1`, value: `value1`}, {label: `label2`, value: `value2`}, ...]
+         */
+        PropTypes.object,
+        /**
+         * An array of options {label: [string|number], value: [string|number]},
+         * an optional disabled field can be used for each option
+         */
+        PropTypes.arrayOf(
+            PropTypes.exact({
+                /**
+                 * The option's label
+                 */
+                label: PropTypes.node.isRequired,
+
+                /**
+                 * The value of the option. This value
+                 * corresponds to the items specified in the
+                 * `value` property.
+                 */
+                value: PropTypes.oneOfType([
+                    PropTypes.string,
+                    PropTypes.number,
+                    PropTypes.bool,
+                ]).isRequired,
+
+                /**
+                 * If true, this option is disabled and cannot be selected.
+                 */
+                disabled: PropTypes.bool,
+
+                /**
+                 * The HTML 'title' attribute for the option. Allows for
+                 * information on hover. For more information on this attribute,
+                 * see https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/title
+                 */
+                title: PropTypes.string,
+
+                /**
+                 * Optional search value for the option, to use if the label
+                 * is a component or provide a custom search value different
+                 * from the label. If no search value and the label is a
+                 * component, the `value` will be used for search.
+                 */
+                search: PropTypes.string,
             })
         ),
-        PropTypes.shape({
-                value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-                label: PropTypes.string,
-            })
+    ]),
+
+    /**
+     * The value of the input. If `multi` is false (the default)
+     * then value is just a string that corresponds to the values
+     * provided in the `options` property. If `multi` is true, then
+     * multiple values can be selected at once, and `value` is an
+     * array of items with values corresponding to those in the
+     * `options` prop.
+     */
+    value: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+        PropTypes.bool,
+        PropTypes.arrayOf(
+            PropTypes.oneOfType([
+                PropTypes.string,
+                PropTypes.number,
+                PropTypes.bool,
+            ])
+        ),
     ]),
     multi: PropTypes.bool,
     placeholder: PropTypes.string,

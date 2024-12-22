@@ -29,6 +29,7 @@ app.layout = html.Div(
             multi=False,
             clearable=False,
             disabled=False,
+            searchable=False
         ),
         html.Div(id='output')
     ], style={'width': '50%', 'display': 'inline-block'}),
@@ -39,11 +40,12 @@ html.Div([
                        value=False),
         dash_dropdown_components.Dropdown(
             id='input2',
-            options=options,
-            value=options[0],
+            options=[x['value'] for x in options],
+            #value=options[0]['value'],
             multi=False,
             clearable=False,
             disabled=False,
+            searchable=False
         ),
         html.Div(id='output2')
     ], style={'width': '50%', 'display': 'inline-block'})

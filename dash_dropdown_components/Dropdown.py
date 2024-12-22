@@ -19,13 +19,32 @@ Keyword arguments:
 
 - multi (boolean; default False)
 
-- options (list of dicts; required)
+- options (list of dicts; optional)
 
-    `options` is a list of dicts with keys:
+    `options` is a list of string | number | booleans | dict | list of
+    dicts with keys:
 
-    - value (string | number; required)
+    - label (a list of or a singular dash component, string or number; required):
+        The option's label.
 
-    - label (string; optional)
+    - value (string | number | boolean; required):
+        The value of the option. This value corresponds to the items
+        specified in the `value` property.
+
+    - disabled (boolean; optional):
+        If True, this option is disabled and cannot be selected.
+
+    - title (string; optional):
+        The HTML 'title' attribute for the option. Allows for
+        information on hover. For more information on this attribute,
+        see
+        https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/title.
+
+    - search (string; optional):
+        Optional search value for the option, to use if the label is a
+        component or provide a custom search value different from the
+        label. If no search value and the label is a component, the
+        `value` will be used for search.
 
 - placeholder (string; default 'Select...')
 
@@ -33,25 +52,18 @@ Keyword arguments:
 
 - style (dict; optional)
 
-- value (list of dicts; optional)
-
-    `value` is a list of dicts with keys:
-
-    - value (string
-
-      Or number; required)
-
-    - label (string; optional) | dict with keys:
-
-    - value (string | number; required)
-
-    - label (string; optional)"""
-    _children_props = []
+- value (string | number | boolean | list of string | number | booleans; optional):
+    The value of the input. If `multi` is False (the default) then
+    value is just a string that corresponds to the values provided in
+    the `options` property. If `multi` is True, then multiple values
+    can be selected at once, and `value` is an array of items with
+    values corresponding to those in the `options` prop."""
+    _children_props = ['options[].label']
     _base_nodes = ['children']
     _namespace = 'dash_dropdown_components'
     _type = 'Dropdown'
     @_explicitize_args
-    def __init__(self, id=Component.UNDEFINED, options=Component.REQUIRED, value=Component.UNDEFINED, multi=Component.UNDEFINED, placeholder=Component.UNDEFINED, disabled=Component.UNDEFINED, searchable=Component.UNDEFINED, clearable=Component.UNDEFINED, style=Component.UNDEFINED, className=Component.UNDEFINED, **kwargs):
+    def __init__(self, id=Component.UNDEFINED, options=Component.UNDEFINED, value=Component.UNDEFINED, multi=Component.UNDEFINED, placeholder=Component.UNDEFINED, disabled=Component.UNDEFINED, searchable=Component.UNDEFINED, clearable=Component.UNDEFINED, style=Component.UNDEFINED, className=Component.UNDEFINED, **kwargs):
         self._prop_names = ['id', 'className', 'clearable', 'disabled', 'multi', 'options', 'placeholder', 'searchable', 'style', 'value']
         self._valid_wildcard_attributes =            []
         self.available_properties = ['id', 'className', 'clearable', 'disabled', 'multi', 'options', 'placeholder', 'searchable', 'style', 'value']
@@ -60,10 +72,5 @@ Keyword arguments:
         _locals = locals()
         _locals.update(kwargs)  # For wildcard attrs and excess named props
         args = {k: _locals[k] for k in _explicit_args}
-
-        for k in ['options']:
-            if k not in args:
-                raise TypeError(
-                    'Required argument `' + k + '` was not specified.')
 
         super(Dropdown, self).__init__(**args)
