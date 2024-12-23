@@ -96,6 +96,23 @@ class Dropdown extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    // Change value from item to list or reverse when multi changes
+    componentWillReceiveProps(nextProps) {
+        const { setProps } = this.props;
+        if (this.props.multi !== nextProps.multi) {
+
+            let newValue;
+            newValue = this.props.value;
+            if (isNil(newValue)) {
+                newValue = nextProps.multi ? [] : null;
+            } else {
+                newValue = nextProps.multi ? [newValue] : newValue[0];
+            }
+
+            setProps({ value: newValue });
+        }
+    }
+
     /**
      * Handle the value change and communicate it to Dash via setProps.
      */
