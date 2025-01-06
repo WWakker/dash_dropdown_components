@@ -65,7 +65,8 @@ html.Div([
             value=['fruits', 'banana'],
             multi=False,
             disabled=False,
-            hide_options_on_select=True
+            hide_options_on_select=True,
+            submenu_widths=['10vw', '20vw']
         ),
         html.Div(id='output3')
     ], style={'width': '25%', 'display': 'inline-block'}),

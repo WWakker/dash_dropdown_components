@@ -14,6 +14,9 @@ const MultiLevelOption = (props) => {
   const isSelected = props.isMulti ? props.selectedOptions.some(selected => JSON.stringify(selected) === JSON.stringify(data.value)): JSON.stringify(props.selectedOptions) === JSON.stringify(data.value)
 
   if (isSelected && props.hideOptionsOnSelect) return null
+
+  const submenuWidth = props.subMenuWidths ? {width: props.subMenuWidths[data.value.length - 1]} : {}
+
   return (
     <div
       ref={innerRef}
@@ -30,7 +33,7 @@ const MultiLevelOption = (props) => {
         <span style={{ marginLeft: "auto" }}><MdArrowRight label="Arrow" size='15px' className='ddc-ml-dropdown-arrow-right'/></span>
       )}
       {data.suboptions && data.suboptions.length > 0 && (
-        <div className="ddc-ml-submenu">
+        <div className="ddc-ml-submenu" style={submenuWidth}>
           {data.suboptions.map((subOption) => (
             <MultiLevelOption
               key={subOption.value}
@@ -47,8 +50,8 @@ const MultiLevelOption = (props) => {
   );
 };
 
-const MultiLevelOptionWrapper = (selectedOptions, hideOptionsOnSelect) => (props) => {
-  return <MultiLevelOption {...props} selectedOptions={selectedOptions} hideOptionsOnSelect={hideOptionsOnSelect} />;
+const MultiLevelOptionWrapper = (selectedOptions, hideOptionsOnSelect, subMenuWidths) => (props) => {
+  return <MultiLevelOption {...props} selectedOptions={selectedOptions} hideOptionsOnSelect={hideOptionsOnSelect} subMenuWidths={subMenuWidths} />;
 };
 
 const CustomMenuList = (props) => {
@@ -164,7 +167,7 @@ class MultiLevelDropdown extends Component {
                     components={{
                         DropdownIndicator: DropdownIndicator,
                         IndicatorSeparator: IndicatorSeparator,
-                        Option: MultiLevelOptionWrapper(this.state.value, this.props.hide_options_on_select),
+                        Option: MultiLevelOptionWrapper(this.state.value, this.props.hide_options_on_select, this.props.submenu_widths),
                         MenuList: CustomMenuList,
                         MultiValue: SortableMultiValue,
                         MultiValueLabel: SortableMultiValueLabel
@@ -256,6 +259,10 @@ MultiLevelDropdown.propTypes = {
      */
     hide_options_on_select: PropTypes.bool,
     /**
+     * If true, options are removed when selected.
+     */
+    submenu_widths: PropTypes.array,
+    /**
      * Whether to enable the searching feature or not
      */
     setProps: PropTypes.func,
@@ -274,7 +281,8 @@ MultiLevelDropdown.defaultProps = {
     multi: false,
     placeholder: 'Select...',
     disabled: false,
-    hide_options_on_select: false
+    hide_options_on_select: false,
+    submenu_widths: null
 };
 
 export default MultiLevelDropdown;

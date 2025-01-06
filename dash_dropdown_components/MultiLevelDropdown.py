@@ -52,6 +52,9 @@ Keyword arguments:
 - style (dict; optional):
     Defines CSS styles which will override styles previously set.
 
+- submenu_widths (list; optional):
+    If True, options are removed when selected.
+
 - value (list of list of string | number | booleanss | list of string | number | booleans; optional):
     The value of the input. If multi is False (the default) then value
     is just a string that corresponds to the values provided in the
@@ -63,10 +66,10 @@ Keyword arguments:
     _namespace = 'dash_dropdown_components'
     _type = 'MultiLevelDropdown'
     @_explicitize_args
-    def __init__(self, id=Component.UNDEFINED, options=Component.UNDEFINED, value=Component.UNDEFINED, multi=Component.UNDEFINED, placeholder=Component.UNDEFINED, disabled=Component.UNDEFINED, hide_options_on_select=Component.UNDEFINED, style=Component.UNDEFINED, className=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['id', 'className', 'disabled', 'hide_options_on_select', 'multi', 'options', 'placeholder', 'style', 'value']
+    def __init__(self, id=Component.UNDEFINED, options=Component.UNDEFINED, value=Component.UNDEFINED, multi=Component.UNDEFINED, placeholder=Component.UNDEFINED, disabled=Component.UNDEFINED, hide_options_on_select=Component.UNDEFINED, submenu_widths=Component.UNDEFINED, style=Component.UNDEFINED, className=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['id', 'className', 'disabled', 'hide_options_on_select', 'multi', 'options', 'placeholder', 'style', 'submenu_widths', 'value']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['id', 'className', 'disabled', 'hide_options_on_select', 'multi', 'options', 'placeholder', 'style', 'value']
+        self.available_properties = ['id', 'className', 'disabled', 'hide_options_on_select', 'multi', 'options', 'placeholder', 'style', 'submenu_widths', 'value']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

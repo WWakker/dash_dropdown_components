@@ -25,6 +25,7 @@ Those elements have the following types:
   - `label` (String | Real | Bool; required)ss
 - `placeholder` (String; optional): A placeholder in the dropdown input if no selection is made yet; default is 'Select...'
 - `style` (Dict; optional): Defines CSS styles which will override styles previously set.
+- `submenu_widths` (Array; optional): If true, options are removed when selected.
 - `value` (Array of Array of String | Real | Boolss | Array of String | Real | Bools; optional): The value of the input. If multi is false (the default)
 then value is just a string that corresponds to the values
 provided in the options property. If multi is true, then
@@ -33,7 +34,7 @@ array of items with values corresponding to those in the
 options prop.
 """
 function multileveldropdown(; kwargs...)
-        available_props = Symbol[:id, :className, :disabled, :hide_options_on_select, :multi, :options, :placeholder, :style, :value]
+        available_props = Symbol[:id, :className, :disabled, :hide_options_on_select, :multi, :options, :placeholder, :style, :submenu_widths, :value]
         wild_props = Symbol[]
         return Component("multileveldropdown", "MultiLevelDropdown", "dash_dropdown_components", available_props, wild_props; kwargs...)
 end

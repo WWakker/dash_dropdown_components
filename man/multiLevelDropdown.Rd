@@ -12,7 +12,8 @@ A dropdown similar to dcc.Dropdown but with multiple levels, where the menu stay
 \usage{
 multiLevelDropdown(id=NULL, className=NULL, disabled=NULL,
 hide_options_on_select=NULL, multi=NULL, options=NULL,
-placeholder=NULL, style=NULL, value=NULL)
+placeholder=NULL, style=NULL, submenu_widths=NULL,
+value=NULL)
 }
 
 \arguments{
@@ -40,6 +41,8 @@ those elements have the following types:
 \item{placeholder}{Character. A placeholder in the dropdown input if no selection is made yet; default is 'Select...'}
 
 \item{style}{Named list. Defines CSS styles which will override styles previously set.}
+
+\item{submenu_widths}{Unnamed list. If true, options are removed when selected.}
 
 \item{value}{List of list of character | numeric | logicalss | list of character | numeric | logicals. The value of the input. If multi is false (the default)
 then value is just a string that corresponds to the values

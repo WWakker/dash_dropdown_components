@@ -84,7 +84,7 @@ const App = () => {
             {<p>Selected: {JSON.stringify(state.value)}</p>}
         </div>
         <div style={dropdown_style}>
-            <MultiLevelDropdown options={multi_options} multi={true} setProps={setPropsMulti} {...stateMulti} />
+            <MultiLevelDropdown options={multi_options} multi={true} setProps={setPropsMulti} {...stateMulti} submenu_widths={['10vw', '10vw']}/>
             {<p>Selected: {JSON.stringify(stateMulti.value)}</p>}
         </div>
     </div>
