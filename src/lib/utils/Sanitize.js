@@ -25,20 +25,20 @@ export const sanitizeOptions = options => {
     return options;
 };
 
-export const sanitizeValue = (value, multi, sanitizedOptions) => {
+export const sanitizeValue = (value, sanitizedOptions) => {
 
-    let return_value;
+    let result;
 
     if (isNil(value)) {
-        return_value = multi ? [] : null;
+        result = null;
     } else if (Array.isArray(value)) {
-        return_value = (sanitizedOptions
+        result = (sanitizedOptions
         .filter(option => value.includes(option.value))
         .sort((a, b) => value.indexOf(a.value) - value.indexOf(b.value))
         );
     } else {
-        return_value = sanitizedOptions.filter(option => option.value === value);
+        result = sanitizedOptions.filter(option => option.value === value);
     };
 
-    return return_value;
+    return result;
 }

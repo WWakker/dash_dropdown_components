@@ -12,10 +12,8 @@ Keyword arguments:
 in callbacks. The ID needs to be unique across all of the
 components in an app.
 - `className` (String; optional): className of the dropdown element
-- `clearable` (Bool; optional): Whether or not the dropdown is "clearable", that is, whether or
-not a small "x" appears on the right of the dropdown that removes
-the selected value.
 - `disabled` (Bool; optional): If true, this dropdown is disabled and the selection cannot be changed.
+- `hide_options_on_select` (Bool; optional): If true, options are removed when selected.
 - `multi` (Bool; optional): If true, the user can select multiple values
 - `options` (optional): An array of options {label: [string|number], value: [string|number]},. options has the following type: Array of String | Real | Bools | Dict | Array of lists containing elements 'label', 'value', 'disabled', 'title', 'search'.
 Those elements have the following types:
@@ -42,7 +40,7 @@ array of items with values corresponding to those in the
 `options` prop.
 """
 function dropdown(; kwargs...)
-        available_props = Symbol[:id, :className, :clearable, :disabled, :multi, :options, :placeholder, :searchable, :style, :value]
+        available_props = Symbol[:id, :className, :disabled, :hide_options_on_select, :multi, :options, :placeholder, :searchable, :style, :value]
         wild_props = Symbol[]
         return Component("dropdown", "Dropdown", "dash_dropdown_components", available_props, wild_props; kwargs...)
 end

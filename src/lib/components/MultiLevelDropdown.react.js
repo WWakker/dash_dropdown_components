@@ -1,4 +1,4 @@
-import React, { Component, MouseEventHandler } from 'react';
+import React, { Component, MouseEventHandler, Fragment, useState, useRef, useEffect } from 'react';
 import Select, { components, MultiValueGenericProps, MultiValueProps, OnChangeValue, Props, DropdownIndicatorProps, IndicatorSeparatorProps } from 'react-select';
 import {
   SortableContainer,
@@ -8,8 +8,8 @@ import {
   SortableHandle,
 } from 'react-sortable-hoc';
 import PropTypes from 'prop-types';
-import { MdArrowDropUp, MdArrowDropDown } from "react-icons/md";
-import { sanitizeOptions, sanitizeValue } from '../utils/Sanitize'
+import { MdArrowDropUp, MdArrowDropDown, MdArrowRight } from "react-icons/md";
+import { flattenOptions, nestOptions, sanitizeValueMultiLevel } from '../utils/SanitizeMultiLevel'
 import {isNil, pluck, without, pick} from 'ramda';
 import '../styles.css'
 
@@ -90,14 +90,69 @@ const colorStyles = {
   }),
 };
 
+// Recursive Component for Menu Items
+const MultiLevelOption = (props) => {
+  const { data, innerRef, innerProps, selectOption, ...rest } = props
+  const isSelected = props.isMulti ? props.selectedOptions.some(selected => JSON.stringify(selected) === JSON.stringify(data.value)): JSON.stringify(props.selectedOptions) === JSON.stringify(data.value)
+
+  if (isSelected && props.hideOptionsOnSelect) return null
+  return (
+    <div
+      ref={innerRef}
+      {...innerProps}
+      className={isSelected ? "ddc-ml-option ddc-ml-option-is-selected": "ddc-ml-option"}
+      onClick={(e) => {
+        if (!data.suboptions) {
+            selectOption(data);
+        }
+      }}
+    >
+      <span style={{ flex: 1 }}>{String(data.label.slice(-1))}</span>
+      {data.suboptions && data.suboptions.length > 0 && (
+        <span style={{ marginLeft: "auto" }}><MdArrowRight label="Arrow" size='15px' className='ddc-ml-dropdown-arrow-right'/></span>
+      )}
+      {data.suboptions && data.suboptions.length > 0 && (
+        <div className="ddc-ml-submenu">
+          {data.suboptions.map((subOption) => (
+            <MultiLevelOption
+              key={subOption.value}
+              data={subOption}
+              innerRef={innerRef}
+              innerProps={innerProps}
+              selectOption={selectOption}
+              {...rest}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const MultiLevelOptionWrapper = (selectedOptions, hideOptionsOnSelect) => (props) => {
+  return <MultiLevelOption {...props} selectedOptions={selectedOptions} hideOptionsOnSelect={hideOptionsOnSelect} />;
+};
+
+const CustomMenuList = (props) => {
+
+  return (
+    <components.MenuList {...props}>
+      {React.Children.map(props.children, (child) =>
+        React.cloneElement(child)
+      )}
+    </components.MenuList>
+  );
+};
+
 /**
  * A dropdown similar to dcc.Dropdown, where the menu stays open when multi=true and a selection is made
  */
-class Dropdown extends Component {
+class MultiLevelDropdown extends Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
-        this.state = {value: props.value}
+        const stateValue = isNil(props.value) ? props.multi ? [[]] : [] : props.value
+        this.state = { value: stateValue }
     }
 
     // Change value from item to list or reverse when multi changes
@@ -105,8 +160,7 @@ class Dropdown extends Component {
         const { setProps } = this.props;
         if (this.props.multi !== nextProps.multi) {
 
-            let newValue;
-            newValue = this.props.value;
+            let newValue = this.props.value;
             if (isNil(newValue)) {
                 newValue = nextProps.multi ? [] : null;
             } else {
@@ -126,37 +180,42 @@ class Dropdown extends Component {
     handleChange = (selectedOption) => {
         const { multi, setProps } = this.props;
 
-        let return_value;
+        let newValue;
 
         if (multi) {
                 if (isNil(selectedOption)) {
-                    return_value = [];
+                    newValue = [];
                 } else {
-                    return_value = pluck('value', selectedOption);
+                    newValue = pluck('value', selectedOption);
                 }
         } else {
             if (isNil(selectedOption)) {
-                return_value = null;
+                newValue = null;
             } else {
-                return_value = selectedOption.value;
+                newValue = selectedOption.value;
             }
         };
 
-        this.setState({ value: return_value })
+        this.setState({ value: newValue })
         if (setProps) {
-            setProps({ value: return_value });
+            setProps({ value: newValue });
         }
     };
 
     onSortEnd = ({oldIndex, newIndex}) => {
         const { multi, setProps, value } = this.props;
         const newValue = arrayMove(value, oldIndex, newIndex);
-        setProps({ value: newValue });
+        this.setState({ value: newValue })
+        if (setProps) {
+            setProps({ value: newValue });
+        }
       };
 
     render() {
 
-        const sanitizedOptions = sanitizeOptions(this.props.options)
+        const nestedOptions = nestOptions(this.props.options)
+        const flattenedOptions = flattenOptions(nestedOptions)
+        const sanitizedValue = sanitizeValueMultiLevel(this.state.value, flattenedOptions)
 
         return (
              <div
@@ -171,24 +230,29 @@ class Dropdown extends Component {
                     distance={4}
                     getHelperDimensions={({ node }) => node.getBoundingClientRect()}
                     isMulti={this.props.multi}
-                    options={sanitizedOptions}
-                    value={sanitizeValue(this.state.value, sanitizedOptions)}
+                    options={nestedOptions}
+                    value={sanitizedValue}
                     onChange={this.handleChange}
                     placeholder={this.props.placeholder}
                     isDisabled={this.props.disabled}
-                    isSearchable={this.props.searchable}
+                    isSearchable={false}
                     isClearable={this.props.multi}
                     closeMenuOnSelect={!this.props.multi}
                     blurInputOnSelect={!this.props.multi}
                     backspaceRemoves={this.props.clearable}
-                    hideSelectedOptions={this.props.hide_options_on_select}
+                    hideSelectedOptions={false}
                     className={this.props.className}
-                    classNamePrefix='ddc-dropdown'
+                    classNamePrefix='ddc-ml-dropdown'
                     components={{
-                        DropdownIndicator,
-                        IndicatorSeparator,
+                        DropdownIndicator: DropdownIndicator,
+                        IndicatorSeparator: IndicatorSeparator,
+                        Option: MultiLevelOptionWrapper(this.state.value, this.props.hide_options_on_select),
+                        MenuList: CustomMenuList,
                         MultiValue: SortableMultiValue,
                         MultiValueLabel: SortableMultiValueLabel
+                    }}
+                    formatOptionLabel={(option, { context }) => {
+                        return context === "menu" ? option.label.slice(-1) : option.label.join('>');
                     }}
                     styles={colorStyles}
                 />
@@ -198,7 +262,7 @@ class Dropdown extends Component {
 }
 
 // PropTypes to enforce prop validation
-Dropdown.propTypes = {
+MultiLevelDropdown.propTypes = {
     /**
      * The ID of this component, used to identify dash components
      * in callbacks. The ID needs to be unique across all of the
@@ -208,88 +272,54 @@ Dropdown.propTypes = {
     /**
      * An array of options {label: [string|number], value: [string|number]},
      */
-    options: PropTypes.oneOfType([
-        /**
-         * Array of options where the label and the value are the same thing - [string|number|bool]
-         */
-        PropTypes.arrayOf(
-            PropTypes.oneOfType([
-                PropTypes.string,
-                PropTypes.number,
-                PropTypes.bool,
-            ])
-        ),
-        /**
-         * Simpler `options` representation in dictionary format. The order is not guaranteed.
-         * {`value1`: `label1`, `value2`: `label2`, ... }
-         * which is equal to
-         * [{label: `label1`, value: `value1`}, {label: `label2`, value: `value2`}, ...]
-         */
-        PropTypes.object,
-        /**
-         * An array of options {label: [string|number], value: [string|number]},
-         * an optional disabled field can be used for each option
-         */
-        PropTypes.arrayOf(
-            PropTypes.exact({
-                /**
-                 * The option's label
-                 */
-                label: PropTypes.node.isRequired,
-
-                /**
-                 * The value of the option. This value
-                 * corresponds to the items specified in the
-                 * `value` property.
-                 */
-                value: PropTypes.oneOfType([
+    options: PropTypes.arrayOf(PropTypes.shape({
+        value: PropTypes.oneOfType([
                     PropTypes.string,
                     PropTypes.number,
                     PropTypes.bool,
-                ]).isRequired,
-
-                /**
-                 * If true, this option is disabled and cannot be selected.
-                 */
-                disabled: PropTypes.bool,
-
-                /**
-                 * The HTML 'title' attribute for the option. Allows for
-                 * information on hover. For more information on this attribute,
-                 * see https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/title
-                 */
-                title: PropTypes.string,
-
-                /**
-                 * Optional search value for the option, to use if the label
-                 * is a component or provide a custom search value different
-                 * from the label. If no search value and the label is a
-                 * component, the `value` will be used for search.
-                 */
-                search: PropTypes.string,
-            })
-        ),
-    ]),
+                    ]).isRequired,
+        label: PropTypes.oneOfType([
+                    PropTypes.string,
+                    PropTypes.number,
+                    PropTypes.bool,
+                    ]).isRequired,
+        options: PropTypes.arrayOf(PropTypes.shape({
+          value: PropTypes.oneOfType([
+                    PropTypes.string,
+                    PropTypes.number,
+                    PropTypes.bool,
+                    ]).isRequired,
+          label: PropTypes.oneOfType([
+                    PropTypes.string,
+                    PropTypes.number,
+                    PropTypes.bool,
+                    ]).isRequired,
+        })),
+      })),
 
     /**
-     * The value of the input. If `multi` is false (the default)
+     * The value of the input. If multi is false (the default)
      * then value is just a string that corresponds to the values
-     * provided in the `options` property. If `multi` is true, then
-     * multiple values can be selected at once, and `value` is an
+     * provided in the options property. If multi is true, then
+     * multiple values can be selected at once, and value is an
      * array of items with values corresponding to those in the
-     * `options` prop.
+     * options prop.
      */
     value: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number,
-        PropTypes.bool,
         PropTypes.arrayOf(
-            PropTypes.oneOfType([
-                PropTypes.string,
-                PropTypes.number,
-                PropTypes.bool,
-            ])
+                PropTypes.arrayOf(PropTypes.oneOfType([
+                    PropTypes.string,
+                    PropTypes.number,
+                    PropTypes.bool,
+                    ])
+                )
         ),
+        PropTypes.arrayOf(PropTypes.oneOfType([
+                    PropTypes.string,
+                    PropTypes.number,
+                    PropTypes.bool,
+                    ])
+                )
     ]),
     /**
      * If true, the user can select multiple values
@@ -310,11 +340,6 @@ Dropdown.propTypes = {
     /**
      * Whether to enable the searching feature or not
      */
-    searchable: PropTypes.bool,
-    /**
-     * Dash-assigned callback that should be called to report property changes
-     * to Dash, to make them available for callbacks.
-     */
     setProps: PropTypes.func,
     /**
      * Defines CSS styles which will override styles previously set.
@@ -326,13 +351,12 @@ Dropdown.propTypes = {
     className: PropTypes.string,
 };
 
-Dropdown.defaultProps = {
+MultiLevelDropdown.defaultProps = {
     value: null,
     multi: false,
     placeholder: 'Select...',
     disabled: false,
-    searchable: true,
     hide_options_on_select: false
 };
 
-export default Dropdown;
+export default MultiLevelDropdown;

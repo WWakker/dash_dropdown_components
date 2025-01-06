@@ -6,6 +6,7 @@ const resources_path = realpath(joinpath( @__DIR__, "..", "deps"))
 const version = "0.0.1"
 
 include("jl/dropdown.jl")
+include("jl/multileveldropdown.jl")
 
 function __init__()
     DashBase.register_package(
@@ -27,13 +28,6 @@ DashBase.Resource(
     dynamic = true,
     async = nothing,
     type = :js
-),
-DashBase.Resource(
-    relative_package_path = "styles.css",
-    external_url = nothing,
-    dynamic = nothing,
-    async = nothing,
-    type = :css
 )
             ]
         )

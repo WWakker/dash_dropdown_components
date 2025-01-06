@@ -15,6 +15,22 @@ options = [
     {'value': 'mandarin', 'label': 'Mandarin'},
 ]
 
+multi_level_options = [
+            { 'label': 'Apple', 'value': 'apple' },
+            { 'label': 'Banana', 'value': 'banana' },
+            { 
+                'label': 'Berries',
+                'value': 'berries',
+                'suboptions': [
+                    { 'label': 'Strawberry', 'value': 'strawberry', 
+                     'suboptions': [
+                         { 'label': 'Big straaaaaaaaaaaaaaaaaaaaaaaaaaawberry', 'value': 'big strawberry' }
+                         ]},
+                    { 'label': 'Blueberry', 'value': 'blueberry' }
+                ]
+            }
+]; 
+
 app.layout = html.Div(
     [
             html.Div([
@@ -32,7 +48,7 @@ app.layout = html.Div(
             searchable=False
         ),
         html.Div(id='output')
-    ], style={'width': '50%', 'display': 'inline-block'}),
+    ], style={'width': '25%', 'display': 'inline-block'}),
 html.Div([
         dcc.RadioItems(id='radioitem2',
                        options=[{'label': 'True', 'value': True},
@@ -43,12 +59,26 @@ html.Div([
             options=options,
             value=options[0]['value'],
             multi=False,
-            clearable=False,
             disabled=False,
-            searchable=True
+            searchable=True,
+            hide_options_on_select=True
         ),
         html.Div(id='output2')
-    ], style={'width': '50%', 'display': 'inline-block'})
+    ], style={'width': '25%', 'display': 'inline-block'}),
+html.Div([
+        dcc.RadioItems(id='radioitem3',
+                       options=[{'label': 'True', 'value': True},
+                                {'label': 'False', 'value': False}],
+                       value=False),
+        dash_dropdown_components.MultiLevelDropdown(
+            id='input3',
+            options=multi_level_options,
+            multi=False,
+            disabled=False,
+            hide_options_on_select=True
+        ),
+        html.Div(id='output3')
+    ], style={'width': '25%', 'display': 'inline-block'})
 ],
 style={'display': 'flex', 'flexDirection': 'row'})
 
@@ -66,6 +96,14 @@ def set_multi(multi):
     return multi
 
 @callback(Output('input', 'multi'), Input('radioitem', 'value'))
+def set_multi(multi):
+    return multi
+
+@callback(Output('output3', 'children'), Input('input3', 'value'))
+def display_output(value):
+    return 'You have entered {}'.format(value)
+
+@callback(Output('input3', 'multi'), Input('radioitem3', 'value'))
 def set_multi(multi):
     return multi
 

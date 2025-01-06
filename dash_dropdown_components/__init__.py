@@ -79,12 +79,7 @@ _js_dist.extend(
     ]
 )
 
-_css_dist = [
-    {
-        'namespace': package_name,
-        'relative_package_path': 'styles.css'
-     }
-]
+_css_dist = []
 
 
 for _component in __all__:

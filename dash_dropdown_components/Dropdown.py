@@ -17,14 +17,12 @@ Keyword arguments:
 - className (string; optional):
     className of the dropdown element.
 
-- clearable (boolean; default True):
-    Whether or not the dropdown is \"clearable\", that is, whether or
-    not a small \"x\" appears on the right of the dropdown that
-    removes the selected value.
-
 - disabled (boolean; default False):
     If True, this dropdown is disabled and the selection cannot be
     changed.
+
+- hide_options_on_select (boolean; default False):
+    If True, options are removed when selected.
 
 - multi (boolean; default False):
     If True, the user can select multiple values.
@@ -79,10 +77,10 @@ Keyword arguments:
     _namespace = 'dash_dropdown_components'
     _type = 'Dropdown'
     @_explicitize_args
-    def __init__(self, id=Component.UNDEFINED, options=Component.UNDEFINED, value=Component.UNDEFINED, multi=Component.UNDEFINED, placeholder=Component.UNDEFINED, disabled=Component.UNDEFINED, searchable=Component.UNDEFINED, clearable=Component.UNDEFINED, style=Component.UNDEFINED, className=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['id', 'className', 'clearable', 'disabled', 'multi', 'options', 'placeholder', 'searchable', 'style', 'value']
+    def __init__(self, id=Component.UNDEFINED, options=Component.UNDEFINED, value=Component.UNDEFINED, multi=Component.UNDEFINED, placeholder=Component.UNDEFINED, disabled=Component.UNDEFINED, hide_options_on_select=Component.UNDEFINED, searchable=Component.UNDEFINED, style=Component.UNDEFINED, className=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['id', 'className', 'disabled', 'hide_options_on_select', 'multi', 'options', 'placeholder', 'searchable', 'style', 'value']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['id', 'className', 'clearable', 'disabled', 'multi', 'options', 'placeholder', 'searchable', 'style', 'value']
+        self.available_properties = ['id', 'className', 'disabled', 'hide_options_on_select', 'multi', 'options', 'placeholder', 'searchable', 'style', 'value']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()
