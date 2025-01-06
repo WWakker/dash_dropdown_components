@@ -1,94 +1,11 @@
 import React, { Component, MouseEventHandler } from 'react';
-import Select, { components, MultiValueGenericProps, MultiValueProps, OnChangeValue, Props, DropdownIndicatorProps, IndicatorSeparatorProps } from 'react-select';
-import {
-  SortableContainer,
-  SortableContainerProps,
-  SortableElement,
-  SortEndHandler,
-  SortableHandle,
-} from 'react-sortable-hoc';
-import PropTypes from 'prop-types';
-import { MdArrowDropUp, MdArrowDropDown } from "react-icons/md";
-import { sanitizeOptions, sanitizeValue } from '../utils/Sanitize'
+import Select, { components } from 'react-select';
 import {isNil, pluck, without, pick} from 'ramda';
+import PropTypes from 'prop-types';
+import { sanitizeOptions, sanitizeValue } from '../utils/Sanitize'
+import { SortableSelect, SortableMultiValue, SortableMultiValueLabel, arrayMove } from '../utils/sort'
+import { IndicatorSeparator, DropdownIndicator, colorStyles} from '../utils/helpers'
 import '../styles.css'
-
-const arrayMove = (array, from, to) => {
-    if (!Array.isArray(array)) {
-        if (isNil(array)) {
-            return []
-        } else {
-            return [array]
-        }
-    }
-    const slicedArray = array.slice();
-    // Remove the item from the starting index
-    const [movedItem] = slicedArray.splice(from, 1);
-    // Insert the item at the ending index
-    slicedArray.splice(to, 0, movedItem);
-
-  return slicedArray;
-}
-
-const SortableMultiValue = SortableElement( (props) => {
-    // this prevents the menu from being opened/closed when the user clicks
-    // on a value to begin dragging it. ideally, detecting a click (instead of
-    // a drag) would still focus the control and toggle the menu, but that
-    // requires some magic with refs that are out of scope for this example
-    const onMouseDown = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-    };
-    const innerProps = { ...props.innerProps, onMouseDown };
-    return <components.MultiValue {...props} innerProps={innerProps} />;
-  }
-);
-
-const SortableMultiValueLabel = SortableHandle(
-  (props) => <components.MultiValueLabel {...props} />
-);
-
-const SortableSelect = SortableContainer(Select);
-
-const IndicatorSeparator = ({
-  innerProps,
-}) => {
-  return null;
-};
-
-const DropdownIndicator = (props) => {
-  return (
-    <components.DropdownIndicator {...props}>
-      {props.selectProps.menuIsOpen ? (
-        <MdArrowDropUp label="Arrow" size="25px" />
-      ) : (
-        <MdArrowDropDown label="Arrow" size="25px" />
-      )}
-    </components.DropdownIndicator>
-  );
-};
-
-const colorStyles = {
-  multiValue: (styles, { data }) => {
-    return {
-      ...styles,
-      backgroundColor: 'rgba(0, 50, 153, 0.05)', // Use the value for the background color
-    };
-  },
-  multiValueLabel: (styles, { data }) => ({
-    ...styles,
-    color: "rgba(0, 50, 153, 1)", // Set the text color
-  }),
-  multiValueRemove: (styles, { data }) => ({
-    ...styles,
-    color: "rgba(0, 50, 153, 1)",
-    backgroundColor: 'rgba(0, 50, 153, 0.1)',
-    ':hover': {
-      backgroundColor: 'rgba(0, 50, 153, 1)',
-      color: 'white',
-    },
-  }),
-};
 
 /**
  * A dropdown similar to dcc.Dropdown, where the menu stays open when multi=true and a selection is made

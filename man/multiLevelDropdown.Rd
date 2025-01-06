@@ -6,7 +6,7 @@
 \title{MultiLevelDropdown component}
 
 \description{
-A dropdown similar to dcc.Dropdown, where the menu stays open when multi=true and a selection is made
+A dropdown similar to dcc.Dropdown but with multiple levels, where the menu stays open when multi=true and a selection is made
 }
 
 \usage{

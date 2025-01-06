@@ -5,7 +5,7 @@ from dash.development.base_component import Component, _explicitize_args
 
 class MultiLevelDropdown(Component):
     """A MultiLevelDropdown component.
-A dropdown similar to dcc.Dropdown, where the menu stays open when multi=true and a selection is made
+A dropdown similar to dcc.Dropdown but with multiple levels, where the menu stays open when multi=true and a selection is made
 
 Keyword arguments:
 

@@ -16,40 +16,28 @@ options = [
 ]
 
 multi_level_options = [
+    {'label': 'Fruits', 'value': 'fruits', 'suboptions': [
             { 'label': 'Apple', 'value': 'apple' },
             { 'label': 'Banana', 'value': 'banana' },
             { 
                 'label': 'Berries',
                 'value': 'berries',
                 'suboptions': [
-                    { 'label': 'Strawberry', 'value': 'strawberry', 
-                     'suboptions': [
-                         { 'label': 'Big straaaaaaaaaaaaaaaaaaaaaaaaaaawberry', 'value': 'big strawberry' }
-                         ]},
-                    { 'label': 'Blueberry', 'value': 'blueberry' }
+                    { 'label': 'Strawberry', 'value': 'strawberry'},
+                    { 'label': 'Blueberry Blueberry Blueberry Blueberry Blueberry Blueberry Blueberry Blueberry Blueberry', 'value': 'blueberry' }
                 ]
             }
+    ]},
+    {'label': 'Vegetables', 'value': 'vegetables', 'suboptions': [
+        { 'label': 'Potato', 'value': 'potato' },
+        { 'label': 'Carrot', 'value': 'carrot' },
+    ]}
 ]; 
 
 app.layout = html.Div(
     [
-            html.Div([
-        dcc.RadioItems(id='radioitem',
-                       options=[{'label':  'True', 'value': True},
-                                {'label':  'False', 'value': False}],
-                       value=False),
-        dcc.Dropdown(
-            id='input',
-            options=options,
-            value=options[0]['value'],
-            multi=False,
-            clearable=False,
-            disabled=False,
-            searchable=False
-        ),
-        html.Div(id='output')
-    ], style={'width': '25%', 'display': 'inline-block'}),
 html.Div([
+        html.P('ddc.Dropdown'),
         dcc.RadioItems(id='radioitem2',
                        options=[{'label': 'True', 'value': True},
                                 {'label': 'False', 'value': False}],
@@ -66,6 +54,7 @@ html.Div([
         html.Div(id='output2')
     ], style={'width': '25%', 'display': 'inline-block'}),
 html.Div([
+        html.P('ddc.MultiLevelDropdown'),
         dcc.RadioItems(id='radioitem3',
                        options=[{'label': 'True', 'value': True},
                                 {'label': 'False', 'value': False}],
@@ -73,11 +62,29 @@ html.Div([
         dash_dropdown_components.MultiLevelDropdown(
             id='input3',
             options=multi_level_options,
+            value=['fruits', 'banana'],
             multi=False,
             disabled=False,
             hide_options_on_select=True
         ),
         html.Div(id='output3')
+    ], style={'width': '25%', 'display': 'inline-block'}),
+html.Div([
+        html.P('dcc.Dropdown'),
+        dcc.RadioItems(id='radioitem',
+                       options=[{'label':  'True', 'value': True},
+                                {'label':  'False', 'value': False}],
+                       value=False),
+        dcc.Dropdown(
+            id='input',
+            options=options,
+            value=options[0]['value'],
+            multi=False,
+            clearable=False,
+            disabled=False,
+            searchable=False
+        ),
+        html.Div(id='output')
     ], style={'width': '25%', 'display': 'inline-block'})
 ],
 style={'display': 'flex', 'flexDirection': 'row'})
