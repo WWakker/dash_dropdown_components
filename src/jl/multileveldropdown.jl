@@ -12,6 +12,9 @@ Keyword arguments:
 in callbacks. The ID needs to be unique across all of the
 components in an app.
 - `className` (String; optional): className of the dropdown element
+- `clearable` (Bool; optional): Whether or not the dropdown is "clearable", that is, whether or
+not a small "x" appears on the right of the dropdown that removes
+the selected value.
 - `disabled` (Bool; optional): If true, this dropdown is disabled and the selection cannot be changed.
 - `hide_options_on_select` (Bool; optional): If true, options are removed when selected.
 - `multi` (Bool; optional): If true, the user can select multiple values
@@ -34,7 +37,7 @@ array of items with values corresponding to those in the
 options prop.
 """
 function multileveldropdown(; kwargs...)
-        available_props = Symbol[:id, :className, :disabled, :hide_options_on_select, :multi, :options, :placeholder, :style, :submenu_widths, :value]
+        available_props = Symbol[:id, :className, :clearable, :disabled, :hide_options_on_select, :multi, :options, :placeholder, :style, :submenu_widths, :value]
         wild_props = Symbol[]
         return Component("multileveldropdown", "MultiLevelDropdown", "dash_dropdown_components", available_props, wild_props; kwargs...)
 end

@@ -10,7 +10,7 @@ A dropdown similar to dcc.Dropdown, where the menu stays open when multi=true an
 }
 
 \usage{
-dropdown(id=NULL, className=NULL, disabled=NULL,
+dropdown(id=NULL, className=NULL, clearable=NULL, disabled=NULL,
 hide_options_on_select=NULL, multi=NULL, options=NULL,
 placeholder=NULL, searchable=NULL, style=NULL, value=NULL)
 }
@@ -21,6 +21,10 @@ in callbacks. The ID needs to be unique across all of the
 components in an app.}
 
 \item{className}{Character. className of the dropdown element}
+
+\item{clearable}{Logical. Whether or not the dropdown is "clearable", that is, whether or
+not a small "x" appears on the right of the dropdown that removes
+the selected value.}
 
 \item{disabled}{Logical. If true, this dropdown is disabled and the selection cannot be changed.}
 

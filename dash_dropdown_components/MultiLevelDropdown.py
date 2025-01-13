@@ -17,6 +17,11 @@ Keyword arguments:
 - className (string; optional):
     className of the dropdown element.
 
+- clearable (boolean; optional):
+    Whether or not the dropdown is \"clearable\", that is, whether or
+    not a small \"x\" appears on the right of the dropdown that
+    removes the selected value.
+
 - disabled (boolean; default False):
     If True, this dropdown is disabled and the selection cannot be
     changed.
@@ -66,10 +71,10 @@ Keyword arguments:
     _namespace = 'dash_dropdown_components'
     _type = 'MultiLevelDropdown'
     @_explicitize_args
-    def __init__(self, id=Component.UNDEFINED, options=Component.UNDEFINED, value=Component.UNDEFINED, multi=Component.UNDEFINED, placeholder=Component.UNDEFINED, disabled=Component.UNDEFINED, hide_options_on_select=Component.UNDEFINED, submenu_widths=Component.UNDEFINED, style=Component.UNDEFINED, className=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['id', 'className', 'disabled', 'hide_options_on_select', 'multi', 'options', 'placeholder', 'style', 'submenu_widths', 'value']
+    def __init__(self, id=Component.UNDEFINED, options=Component.UNDEFINED, value=Component.UNDEFINED, multi=Component.UNDEFINED, clearable=Component.UNDEFINED, placeholder=Component.UNDEFINED, disabled=Component.UNDEFINED, hide_options_on_select=Component.UNDEFINED, submenu_widths=Component.UNDEFINED, style=Component.UNDEFINED, className=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['id', 'className', 'clearable', 'disabled', 'hide_options_on_select', 'multi', 'options', 'placeholder', 'style', 'submenu_widths', 'value']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['id', 'className', 'disabled', 'hide_options_on_select', 'multi', 'options', 'placeholder', 'style', 'submenu_widths', 'value']
+        self.available_properties = ['id', 'className', 'clearable', 'disabled', 'hide_options_on_select', 'multi', 'options', 'placeholder', 'style', 'submenu_widths', 'value']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

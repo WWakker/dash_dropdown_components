@@ -94,7 +94,7 @@ class Dropdown extends Component {
                     placeholder={this.props.placeholder}
                     isDisabled={this.props.disabled}
                     isSearchable={this.props.searchable}
-                    isClearable={this.props.multi}
+                    isClearable={this.props.clearable ?? this.props.multi}
                     closeMenuOnSelect={!this.props.multi}
                     blurInputOnSelect={!this.props.multi}
                     backspaceRemoves={this.props.clearable}
@@ -213,6 +213,12 @@ Dropdown.propTypes = {
      */
     multi: PropTypes.bool,
     /**
+     * Whether or not the dropdown is "clearable", that is, whether or
+     * not a small "x" appears on the right of the dropdown that removes
+     * the selected value.
+     */
+    clearable: PropTypes.bool,
+    /**
      * A placeholder in the dropdown input if no selection is made yet; default is 'Select...'
      */
     placeholder: PropTypes.string,
@@ -244,7 +250,6 @@ Dropdown.propTypes = {
 };
 
 Dropdown.defaultProps = {
-    value: null,
     multi: false,
     placeholder: 'Select...',
     disabled: false,

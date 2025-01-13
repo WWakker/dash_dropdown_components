@@ -157,7 +157,7 @@ class MultiLevelDropdown extends Component {
                     placeholder={this.props.placeholder}
                     isDisabled={this.props.disabled}
                     isSearchable={false}
-                    isClearable={this.props.multi}
+                    isClearable={this.props.clearable ?? this.props.multi}
                     closeMenuOnSelect={!this.props.multi}
                     blurInputOnSelect={!this.props.multi}
                     backspaceRemoves={this.props.clearable}
@@ -247,6 +247,12 @@ MultiLevelDropdown.propTypes = {
      */
     multi: PropTypes.bool,
     /**
+     * Whether or not the dropdown is "clearable", that is, whether or
+     * not a small "x" appears on the right of the dropdown that removes
+     * the selected value.
+     */
+    clearable: PropTypes.bool,
+    /**
      * A placeholder in the dropdown input if no selection is made yet; default is 'Select...'
      */
     placeholder: PropTypes.string,
@@ -277,12 +283,10 @@ MultiLevelDropdown.propTypes = {
 };
 
 MultiLevelDropdown.defaultProps = {
-    value: null,
     multi: false,
     placeholder: 'Select...',
     disabled: false,
     hide_options_on_select: false,
-    submenu_widths: null
 };
 
 export default MultiLevelDropdown;
