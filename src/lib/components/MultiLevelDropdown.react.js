@@ -30,7 +30,7 @@ const MultiLevelOption = (props) => {
     >
       <span style={{ flex: 1 }}>{String(data.label.slice(-1))}</span>
       {data.suboptions && data.suboptions.length > 0 && (
-        <span style={{ marginLeft: "auto" }}><MdArrowRight label="Arrow" size='15px' className='ddc-ml-dropdown-arrow-right'/></span>
+        <span className='ddc-ml-dropdown-arrow-right'>‣</span>
       )}
       {data.suboptions && data.suboptions.length > 0 && (
         <div className="ddc-ml-submenu" style={submenuWidth}>
@@ -160,7 +160,7 @@ class MultiLevelDropdown extends Component {
                     isClearable={this.props.clearable ?? this.props.multi}
                     closeMenuOnSelect={!this.props.multi}
                     blurInputOnSelect={!this.props.multi}
-                    backspaceRemoves={this.props.clearable}
+                    backspaceRemoves={this.props.clearable ?? this.props.multi}
                     hideSelectedOptions={false}
                     className={this.props.className}
                     classNamePrefix='ddc-ml-dropdown'

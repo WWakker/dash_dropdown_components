@@ -24,7 +24,13 @@ multi_level_options = [
                 'value': 'berries',
                 'suboptions': [
                     { 'label': 'Strawberry', 'value': 'strawberry'},
-                    { 'label': 'Blueberry Blueberry Blueberry Blueberry Blueberry Blueberry Blueberry Blueberry Blueberry', 'value': 'blueberry' }
+                    { 'label': 'Blueberry Blueberry Blueberry Blueberry Blueberry Blueberry Blueberry Blueberry Blueberry',
+                      'value': 'blueberry',
+                      'suboptions': [
+                          {'label': 'Blue',
+                           'value': 'blue'}
+                      ]
+                      }
                 ]
             }
     ]},

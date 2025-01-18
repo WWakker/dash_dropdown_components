@@ -21,6 +21,12 @@ div .ddc-dropdown__indicator, div .ddc-ml-dropdown__indicator, .ddc-ml-dropdown-
     color: #999;
 }
 
+.ddc-ml-dropdown-arrow-right {
+    max-height: 14px;
+    align-items: center;
+    display: flex;
+}
+
 div .ddc-dropdown__menu-list, div .ddc-ml-dropdown__menu-list {
     padding: 0;
 }

@@ -97,7 +97,7 @@ class Dropdown extends Component {
                     isClearable={this.props.clearable ?? this.props.multi}
                     closeMenuOnSelect={!this.props.multi}
                     blurInputOnSelect={!this.props.multi}
-                    backspaceRemoves={this.props.clearable}
+                    backspaceRemoves={this.props.clearable ?? this.props.multi}
                     hideSelectedOptions={this.props.hide_options_on_select}
                     className={this.props.className}
                     classNamePrefix='ddc-dropdown'
