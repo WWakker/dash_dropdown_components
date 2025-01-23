@@ -14,9 +14,6 @@ div .ddc-dropdown__control:hover, div .ddc-ml-dropdown__control:hover {
     border-color: rgb(204, 204, 204);
 }
 
-div .ddc-dropdown__indicators, div .ddc-ml-dropdown__indicators {
-}
-
 div .ddc-dropdown__indicator, div .ddc-ml-dropdown__indicator, .ddc-ml-dropdown-arrow-right {
     color: #999;
 }
@@ -33,6 +30,11 @@ div .ddc-dropdown__menu-list, div .ddc-ml-dropdown__menu-list {
 
 div .ddc-ml-dropdown__menu-list {
     overflow-y: visible;
+}
+
+div .ddc-dropdown__input-container {
+    margin: 0;
+    padding: 0;
 }
 
 .ddc-ml-option {

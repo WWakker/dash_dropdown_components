@@ -80,7 +80,7 @@ const App = () => {
   return (
     <div>
         <div style={dropdown_style}>
-            <Dropdown options={options} multi={true} setProps={setProps} {...state} />
+            <Dropdown clearable={true} options={options} multi={true} setProps={setProps} {...state} />
             {<p>Selected: {JSON.stringify(state.value)}</p>}
         </div>
         <div style={dropdown_style}>
