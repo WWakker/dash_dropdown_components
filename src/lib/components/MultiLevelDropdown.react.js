@@ -108,13 +108,13 @@ class MultiLevelDropdown extends Component {
 
         if (multi) {
                 if (isNil(selectedOption) || (Array.isArray(selectedOption) && selectedOption.length === 0)) {
-                    newValue = [[]];
+                    newValue = [];
                 } else {
                     newValue = pluck('value', selectedOption);
                 }
         } else {
             if (isNil(selectedOption)) {
-                newValue = [];
+                newValue = null;
             } else {
                 newValue = selectedOption.value;
             }

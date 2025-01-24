@@ -88,7 +88,7 @@ const App = () => {
       </div>
       <div style={dropdown_style}>
         <MultiLevelDropdown
-          clearable={false}
+          clearable={true}
           options={multi_options}
           multi={isMultiLevelDropdown}
           setProps={setPropsMulti}
