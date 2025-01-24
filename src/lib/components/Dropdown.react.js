@@ -22,20 +22,23 @@ class Dropdown extends Component {
         const { setProps } = this.props;
         if (this.props.multi !== nextProps.multi) {
 
-            let newValue;
-            newValue = this.props.value;
+            let newValue = this.props.value;
             if (isNil(newValue)) {
                 newValue = nextProps.multi ? [] : null;
             } else {
                 newValue = nextProps.multi ? [newValue] : newValue[0];
-            }
+            };
 
             if (setProps) {
                 setProps({ value: newValue });
             }
-            this.setState({ value: newValue })
-        }
-    }
+            this.setState({ value: newValue });
+        };
+
+        if (this.props.value !== nextProps.value) {
+            this.setState({ value: nextProps.value });
+        };
+    };
 
     /**
      * Handle the value change and communicate it to Dash via setProps.

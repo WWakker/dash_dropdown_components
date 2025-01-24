@@ -92,7 +92,11 @@ class MultiLevelDropdown extends Component {
                 setProps({ value: newValue });
             }
             this.setState({ value: newValue })
-        }
+        };
+
+        if (this.props.value !== nextProps.value) {
+            this.setState({ value: nextProps.value });
+        };
     }
 
     /**
