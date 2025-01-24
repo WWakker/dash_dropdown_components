@@ -1,6 +1,6 @@
 {
   "name": "dash_dropdown_components",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Dropdown components for Dash",
   "repository": {
     "type": "git",
