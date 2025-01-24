@@ -79,3 +79,7 @@ div .ddc-dropdown__option--is-selected {
 div .ddc-dropdown__option--is-selected:hover {
     background-color: rgba(222, 235, 255, 1)
 }
+
+div .ddc-dropdown__multi-value__label {
+    white-space: wrap;
+}
