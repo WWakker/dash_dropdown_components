@@ -72,8 +72,6 @@ class MultiLevelDropdown extends Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
-        const stateValue = isNil(props.value) ? props.multi ? [[]] : [] : props.value
-        this.state = { value: stateValue }
     }
 
     // Change value from item to list or reverse when multi changes
@@ -85,18 +83,19 @@ class MultiLevelDropdown extends Component {
             if (isNil(newValue)) {
                 newValue = nextProps.multi ? [] : null;
             } else {
+                if ((nextProps.multi && newValue.some(element => Array.isArray(element))) ||
+                    (!nextProps.multi && !newValue.some(element => Array.isArray(element)))
+                ) {
+                    return;
+                }
                 newValue = nextProps.multi ? [newValue] : newValue[0];
-            }
+            };
 
             if (setProps) {
                 setProps({ value: newValue });
             }
-            this.setState({ value: newValue })
         };
 
-        if (this.props.value !== nextProps.value) {
-            this.setState({ value: nextProps.value });
-        };
     }
 
     /**
@@ -108,20 +107,19 @@ class MultiLevelDropdown extends Component {
         let newValue;
 
         if (multi) {
-                if (isNil(selectedOption)) {
-                    newValue = [];
+                if (isNil(selectedOption) || (Array.isArray(selectedOption) && selectedOption.length === 0)) {
+                    newValue = [[]];
                 } else {
                     newValue = pluck('value', selectedOption);
                 }
         } else {
             if (isNil(selectedOption)) {
-                newValue = null;
+                newValue = [];
             } else {
                 newValue = selectedOption.value;
             }
         };
 
-        this.setState({ value: newValue })
         if (setProps) {
             setProps({ value: newValue });
         }
@@ -130,7 +128,6 @@ class MultiLevelDropdown extends Component {
     onSortEnd = ({oldIndex, newIndex}) => {
         const { multi, setProps, value } = this.props;
         const newValue = arrayMove(value, oldIndex, newIndex);
-        this.setState({ value: newValue })
         if (setProps) {
             setProps({ value: newValue });
         }
@@ -140,7 +137,7 @@ class MultiLevelDropdown extends Component {
 
         const nestedOptions = nestOptions(this.props.options)
         const flattenedOptions = flattenOptions(nestedOptions)
-        const sanitizedValue = sanitizeValueMultiLevel(this.state.value, flattenedOptions)
+        const sanitizedValue = sanitizeValueMultiLevel(this.props.value, flattenedOptions)
 
         return (
              <div
@@ -171,7 +168,7 @@ class MultiLevelDropdown extends Component {
                     components={{
                         DropdownIndicator: DropdownIndicator,
                         IndicatorSeparator: IndicatorSeparator,
-                        Option: MultiLevelOptionWrapper(this.state.value, this.props.hide_options_on_select, this.props.submenu_widths),
+                        Option: MultiLevelOptionWrapper(this.props.value, this.props.hide_options_on_select, this.props.submenu_widths),
                         MenuList: CustomMenuList,
                         MultiValue: SortableMultiValue,
                         MultiValueLabel: SortableMultiValueLabel

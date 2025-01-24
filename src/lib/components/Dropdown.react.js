@@ -14,7 +14,6 @@ class Dropdown extends Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
-        this.state = {value: props.value}
     }
 
     // Change value from item to list or reverse when multi changes
@@ -26,18 +25,19 @@ class Dropdown extends Component {
             if (isNil(newValue)) {
                 newValue = nextProps.multi ? [] : null;
             } else {
+                if ((nextProps.multi && Array.isArray(newValue)) ||
+                    (!nextProps.multi && !Array.isArray(newValue))
+                ) {
+                    return;
+                }
                 newValue = nextProps.multi ? [newValue] : newValue[0];
             };
 
             if (setProps) {
                 setProps({ value: newValue });
             }
-            this.setState({ value: newValue });
         };
 
-        if (this.props.value !== nextProps.value) {
-            this.setState({ value: nextProps.value });
-        };
     };
 
     /**
@@ -62,7 +62,6 @@ class Dropdown extends Component {
             }
         };
 
-        this.setState({ value: return_value })
         if (setProps) {
             setProps({ value: return_value });
         }
@@ -92,7 +91,7 @@ class Dropdown extends Component {
                     getHelperDimensions={({ node }) => node.getBoundingClientRect()}
                     isMulti={this.props.multi}
                     options={sanitizedOptions}
-                    value={sanitizeValue(this.state.value, sanitizedOptions)}
+                    value={sanitizeValue(this.props.value, sanitizedOptions)}
                     onChange={this.handleChange}
                     placeholder={this.props.placeholder}
                     isDisabled={this.props.disabled}
