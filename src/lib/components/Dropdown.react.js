@@ -17,20 +17,20 @@ class Dropdown extends Component {
     }
 
     // Change value from item to list or reverse when multi changes
-    componentWillReceiveProps(nextProps) {
-        const { setProps } = this.props;
-        if (this.props.multi !== nextProps.multi) {
+    componentDidUpdate(prevProps) {
+        const { multi, setProps, value } = this.props;
+        if (prevProps.multi !== multi) {
 
-            let newValue = this.props.value;
-            if (isNil(newValue)) {
-                newValue = nextProps.multi ? [] : null;
+            let newValue = value;
+            if (isNil(newValue) || (Array.isArray(newValue) && newValue.length === 0)) {
+                newValue = multi ? [] : null;
             } else {
-                if ((nextProps.multi && Array.isArray(newValue)) ||
-                    (!nextProps.multi && !Array.isArray(newValue))
+                if ((multi && Array.isArray(newValue)) ||
+                    (!multi && !Array.isArray(newValue))
                 ) {
                     return;
                 }
-                newValue = nextProps.multi ? [newValue] : newValue[0];
+                newValue = multi ? [newValue] : newValue[0];
             };
 
             if (setProps) {
