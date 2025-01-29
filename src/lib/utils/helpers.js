@@ -12,9 +12,9 @@ export const DropdownIndicator = (props) => {
   return (
     <components.DropdownIndicator {...props}>
       {props.selectProps.menuIsOpen ? (
-        <MdArrowDropUp label="Arrow" size="25px" />
+        <MdArrowDropUp label="Arrow" size="20px" />
       ) : (
-        <MdArrowDropDown label="Arrow" size="25px" />
+        <MdArrowDropDown label="Arrow" size="20px" />
       )}
     </components.DropdownIndicator>
   );

@@ -18,6 +18,14 @@ div .ddc-dropdown__indicator, div .ddc-ml-dropdown__indicator, .ddc-ml-dropdown-
     color: #999;
 }
 
+div .ddc-dropdown__indicator, div .ddc-ml-dropdown__indicator {
+    padding: 4px;
+}
+
+div .ddc-dropdown__indicator:hover, div .ddc-ml-dropdown__indicator:hover {
+    color: hsl(0, 0%, 20%);
+}
+
 .ddc-ml-dropdown-arrow-right {
     max-height: 14px;
     align-items: center;
