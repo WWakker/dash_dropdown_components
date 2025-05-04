@@ -3,7 +3,6 @@ import Select, { components } from 'react-select';
 import {isNil, pluck, without, pick} from 'ramda';
 import PropTypes from 'prop-types';
 import { sanitizeOptions, sanitizeValue } from '../utils/Sanitize'
-import { SortableSelect, SortableMultiValue, SortableMultiValueLabel, arrayMove } from '../utils/sort'
 import { IndicatorSeparator, DropdownIndicator, colorStyles} from '../utils/helpers'
 import '../styles.css'
 
@@ -67,15 +66,13 @@ class Dropdown extends Component {
         }
     };
 
-    onSortEnd = ({oldIndex, newIndex}) => {
-        const { multi, setProps, value } = this.props;
-        const newValue = arrayMove(value, oldIndex, newIndex);
-        setProps({ value: newValue });
-      };
-
     render() {
 
         const sanitizedOptions = sanitizeOptions(this.props.options)
+        const customComponents = {
+            DropdownIndicator,
+            IndicatorSeparator,
+        }
 
         return (
              <div
@@ -83,12 +80,7 @@ class Dropdown extends Component {
                 className="dash-dropdown"
                 style={this.props.style}
             >
-                <SortableSelect
-                    useDragHandle
-                    axis='xy'
-                    onSortEnd={this.onSortEnd}
-                    distance={4}
-                    getHelperDimensions={({ node }) => node.getBoundingClientRect()}
+                <Select
                     isMulti={this.props.multi}
                     options={sanitizedOptions}
                     value={sanitizeValue(this.props.value, sanitizedOptions)}
@@ -103,12 +95,7 @@ class Dropdown extends Component {
                     hideSelectedOptions={this.props.hide_options_on_select}
                     className={this.props.className}
                     classNamePrefix='ddc-dropdown'
-                    components={{
-                        DropdownIndicator,
-                        IndicatorSeparator,
-                        MultiValue: SortableMultiValue,
-                        MultiValueLabel: SortableMultiValueLabel
-                    }}
+                    components={customComponents}
                     styles={colorStyles}
                 />
             </div>

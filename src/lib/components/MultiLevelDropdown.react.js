@@ -4,7 +4,6 @@ import {isNil, pluck, without, pick} from 'ramda';
 import PropTypes from 'prop-types';
 import { MdArrowRight } from "react-icons/md";
 import { flattenOptions, nestOptions, sanitizeValueMultiLevel } from '../utils/sanitizemultilevel'
-import { SortableSelect, SortableMultiValue, SortableMultiValueLabel, arrayMove } from '../utils/sort'
 import { IndicatorSeparator, DropdownIndicator, colorStyles} from '../utils/helpers'
 import '../styles.css'
 
@@ -125,19 +124,17 @@ class MultiLevelDropdown extends Component {
         }
     };
 
-    onSortEnd = ({oldIndex, newIndex}) => {
-        const { multi, setProps, value } = this.props;
-        const newValue = arrayMove(value, oldIndex, newIndex);
-        if (setProps) {
-            setProps({ value: newValue });
-        }
-      };
-
     render() {
 
         const nestedOptions = nestOptions(this.props.options)
         const flattenedOptions = flattenOptions(nestedOptions)
         const sanitizedValue = sanitizeValueMultiLevel(this.props.value, flattenedOptions)
+        const customComponents = {
+            DropdownIndicator: DropdownIndicator,
+            IndicatorSeparator: IndicatorSeparator,
+            Option: MultiLevelOptionWrapper(this.props.value, this.props.hide_options_on_select, this.props.submenu_widths),
+            MenuList: CustomMenuList,
+        }
 
         return (
              <div
@@ -145,12 +142,7 @@ class MultiLevelDropdown extends Component {
                 className="dash-dropdown"
                 style={this.props.style}
             >
-                <SortableSelect
-                    useDragHandle
-                    axis='xy'
-                    onSortEnd={this.onSortEnd}
-                    distance={4}
-                    getHelperDimensions={({ node }) => node.getBoundingClientRect()}
+                <Select
                     isMulti={this.props.multi}
                     options={nestedOptions}
                     value={sanitizedValue}
@@ -165,14 +157,7 @@ class MultiLevelDropdown extends Component {
                     hideSelectedOptions={false}
                     className={this.props.className}
                     classNamePrefix='ddc-ml-dropdown'
-                    components={{
-                        DropdownIndicator: DropdownIndicator,
-                        IndicatorSeparator: IndicatorSeparator,
-                        Option: MultiLevelOptionWrapper(this.props.value, this.props.hide_options_on_select, this.props.submenu_widths),
-                        MenuList: CustomMenuList,
-                        MultiValue: SortableMultiValue,
-                        MultiValueLabel: SortableMultiValueLabel
-                    }}
+                    components={customComponents}
                     formatOptionLabel={(option, { context }) => {
                         return context === "menu" ? option.label.slice(-1) : option.label.join('>');
                     }}

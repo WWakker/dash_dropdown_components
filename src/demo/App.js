@@ -6,7 +6,12 @@ const multi_options = [
     value: 'fruits',
     label: 'Fruits',
     suboptions: [
-      { value: 'apple', label: 'Apple', suboptions: [{ value: 'gala', label: 'Gala' }] },
+      { value: 'apple', label: 'Apple', suboptions:
+        [
+            { value: 'gala', label: 'Gala' },
+            { value: 'pinklady', label: 'Pink lady' },
+        ]
+        },
       { value: 'orange', label: 'Orange' },
       { value: 'banana', label: 'Banana' },
       { value: 'kiwi', label: 'Kiwi' },
