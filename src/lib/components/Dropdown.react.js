@@ -1,4 +1,4 @@
-import React, { Component, MouseEventHandler } from 'react';
+import React, { Component, MouseEventHandler, useRef, useEffect, useState } from 'react';
 import Select, { components } from 'react-select';
 import {isNil, pluck, without, pick} from 'ramda';
 import PropTypes from 'prop-types';
@@ -36,7 +36,6 @@ class Dropdown extends Component {
                 setProps({ value: newValue });
             }
         };
-
     };
 
     /**
@@ -67,7 +66,6 @@ class Dropdown extends Component {
     };
 
     render() {
-
         const sanitizedOptions = sanitizeOptions(this.props.options)
         const customComponents = {
             DropdownIndicator,
@@ -75,7 +73,7 @@ class Dropdown extends Component {
         }
 
         return (
-             <div
+            <div
                 id={this.props.id}
                 className="dash-dropdown"
                 style={this.props.style}
@@ -96,7 +94,9 @@ class Dropdown extends Component {
                     className={this.props.className}
                     classNamePrefix='ddc-dropdown'
                     components={customComponents}
-                    styles={colorStyles}
+                    styles={{
+                        ...colorStyles,
+                    }}
                 />
             </div>
         );
@@ -243,7 +243,7 @@ Dropdown.defaultProps = {
     placeholder: 'Select...',
     disabled: false,
     searchable: true,
-    hide_options_on_select: false
+    hide_options_on_select: true
 };
 
 export default Dropdown;

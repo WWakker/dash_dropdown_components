@@ -43,7 +43,7 @@ const options = [
 ];
 
 const App = () => {
-  const [state, setState] = useState({ value: null });
+  const [state, setState] = useState({ value: ['fruits', 'vegetables'] });
   const [stateMulti, setStateMulti] = useState({ value: [['fruits', 'banana']] });
   const [isMultiDropdown, setIsMultiDropdown] = useState(true);
   const [isMultiLevelDropdown, setIsMultiLevelDropdown] = useState(true);

@@ -272,7 +272,7 @@ MultiLevelDropdown.defaultProps = {
     multi: false,
     placeholder: 'Select...',
     disabled: false,
-    hide_options_on_select: false,
+    hide_options_on_select: true,
 };
 
 export default MultiLevelDropdown;
