@@ -26,7 +26,7 @@ Keyword arguments:
     If True, this dropdown is disabled and the selection cannot be
     changed.
 
-- hide_options_on_select (boolean; default False):
+- hide_options_on_select (boolean; default True):
     If True, options are removed when selected.
 
 - multi (boolean; default False):

@@ -3,7 +3,7 @@ module DashDropdownComponents
 using Dash
 
 const resources_path = realpath(joinpath( @__DIR__, "..", "deps"))
-const version = "0.0.13"
+const version = "0.0.14"
 
 include("jl/dropdown.jl")
 include("jl/multileveldropdown.jl")
