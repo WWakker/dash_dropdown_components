@@ -58,7 +58,8 @@ Keyword arguments:
     Defines CSS styles which will override styles previously set.
 
 - submenu_widths (list; optional):
-    If True, options are removed when selected.
+    Control the width of the submenu for each level. Can be in
+    percentage if the preceding level or fixed widths.
 
 - value (list of list of string | number | booleanss | list of string | number | booleans; optional):
     The value of the input. If multi is False (the default) then value
