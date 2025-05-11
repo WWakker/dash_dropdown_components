@@ -1,3 +1,5 @@
+[![PyPI Downloads](https://static.pepy.tech/badge/dash-dropdown-components)](https://pepy.tech/projects/dash-dropdown-components)
+
 # 📦 dash_dropdown_components
 
 Custom dropdown components for [Plotly Dash](https://dash.plotly.com/) similar to [dcc.Dropdown](https://dash.plotly.com/dash-core-components/dropdown), 
@@ -58,19 +60,19 @@ A hierarchical dropdown component that supports nested options (multilevel struc
 
 #### ⚙️ Properties
 
-| Property                 | Type               | Description                                                                                                                                          |
-|--------------------------|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `id`                     | `string`           | Unique component ID                                                                                                                                  |
-| `options`                | `list[dict,str]`   | List of dicts of options with `label`, `value` and `suboptions` keys                                                           |
-| `value`                  | `string` or `list` | Selected value(s)                                                                                                                                    |
-| `multi`                  | `bool`             | Enable multiple selections                                                                                                                           |
+| Property                 | Type               | Description                                                                                                                                           |
+|--------------------------|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `id`                     | `string`           | Unique component ID                                                                                                                                   |
+| `options`                | `list[dict,str]`   | List of dicts of options with `label`, `value` and `suboptions` keys                                                                                  |
+| `value`                  | `string` or `list` | Selected value(s)                                                                                                                                     |
+| `multi`                  | `bool`             | Enable multiple selections                                                                                                                            |
 | `clearable`              | `bool`             | Whether or not the dropdown is "clearable", that is, whether or not a small "x" appears on the right of the dropdown that removes the selected value. |
-| `placeholder`            | `string`           | Placeholder text when nothing is selected                                                                                                            |
-| `disabled`               | `bool`             | If True, this dropdown is disabled and the selection cannot be changed.                                                                              |
-| `hide_options_on_select` | `bool`             | If True, options are removed when selected                                                                                                           |
-| `submenu_widths`         | `list`             | Control the width of the submenu for each level. Can be in percentage if the preceding level or fixed widths                                         |
-| `style`                  | `bool`             | Whether dropdown closes on selection (default `True`)                                                                                                |
-| `className`              | `string`           | Optional CSS class for styling                                                                                                                       |
+| `placeholder`            | `string`           | Placeholder text when nothing is selected                                                                                                             |
+| `disabled`               | `bool`             | If True, this dropdown is disabled and the selection cannot be changed.                                                                               |
+| `hide_options_on_select` | `bool`             | If True, options are removed when selected                                                                                                            |
+| `submenu_widths`         | `list`             | Control the width of the submenu for each level. Can be in percentage of the preceding level or fixed widths                                          |
+| `style`                  | `bool`             | Whether dropdown closes on selection (default `True`)                                                                                                 |
+| `className`              | `string`           | Optional CSS class for styling                                                                                                                        |
 
 ---
 

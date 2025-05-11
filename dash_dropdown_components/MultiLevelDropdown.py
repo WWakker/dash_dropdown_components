@@ -59,7 +59,7 @@ Keyword arguments:
 
 - submenu_widths (list; optional):
     Control the width of the submenu for each level. Can be in
-    percentage if the preceding level or fixed widths.
+    percentage of the preceding level or fixed widths.
 
 - value (list of list of string | number | booleanss | list of string | number | booleans; optional):
     The value of the input. If multi is False (the default) then value

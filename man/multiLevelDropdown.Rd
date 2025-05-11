@@ -46,7 +46,7 @@ those elements have the following types:
 
 \item{style}{Named list. Defines CSS styles which will override styles previously set.}
 
-\item{submenu_widths}{Unnamed list. Control the width of the submenu for each level. Can be in percentage if the preceding level or fixed widths.}
+\item{submenu_widths}{Unnamed list. Control the width of the submenu for each level. Can be in percentage of the preceding level or fixed widths.}
 
 \item{value}{List of list of character | numeric | logicalss | list of character | numeric | logicals. The value of the input. If multi is false (the default)
 then value is just a string that corresponds to the values

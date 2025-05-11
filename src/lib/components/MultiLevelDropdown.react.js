@@ -251,7 +251,7 @@ MultiLevelDropdown.propTypes = {
      */
     hide_options_on_select: PropTypes.bool,
     /**
-     * Control the width of the submenu for each level. Can be in percentage if the preceding level or fixed widths.
+     * Control the width of the submenu for each level. Can be in percentage of the preceding level or fixed widths.
      */
     submenu_widths: PropTypes.array,
     /**

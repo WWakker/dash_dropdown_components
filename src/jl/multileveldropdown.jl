@@ -28,7 +28,7 @@ Those elements have the following types:
   - `label` (String | Real | Bool; required)ss
 - `placeholder` (String; optional): A placeholder in the dropdown input if no selection is made yet; default is 'Select...'
 - `style` (Dict; optional): Defines CSS styles which will override styles previously set.
-- `submenu_widths` (Array; optional): Control the width of the submenu for each level. Can be in percentage if the preceding level or fixed widths.
+- `submenu_widths` (Array; optional): Control the width of the submenu for each level. Can be in percentage of the preceding level or fixed widths.
 - `value` (Array of Array of String | Real | Boolss | Array of String | Real | Bools; optional): The value of the input. If multi is false (the default)
 then value is just a string that corresponds to the values
 provided in the options property. If multi is true, then
