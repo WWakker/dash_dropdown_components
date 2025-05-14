@@ -23,7 +23,7 @@ A customizable dropdown component that enhances the standard Dash dropdown with 
 #### ✅ Features
 
 - **Emulates [dcc.Dropdown](https://dash.plotly.com/dash-core-components/dropdown)** - Drop-in replacement for most use cases.
-- **Stays open on select** – When `multi=True`, the dropdown stays open after selection (unlike `dcc.Dropdown`). You can override this with `close_on_select=False`.
+- **Stays open on select** – When `multi=True`, the dropdown stays open after selection (unlike `dcc.Dropdown`).
 - **Smart multi→single behavior** 
     – When switching `multi=True` to `multi=False` dynamically, the first selected item is automatically preserved—no need for callbacks.
     – Clearable for `multi=True` and not clearable for `multi=False` by default, or control using `clearable` option.
