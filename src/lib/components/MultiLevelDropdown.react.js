@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Select from 'react-select';
 import {isNil, pluck} from 'ramda';
 import PropTypes from 'prop-types';
@@ -8,8 +9,16 @@ import '../styles.css'
 
 // Recursive component for menu items. Extra data arrives via selectProps to avoid
 // recreating a wrapper component type on every render (which causes full remounts).
+//
+// The submenu is rendered via React Portal at document.body so it escapes every
+// ancestor's stacking context, transform, and overflow. Visibility and position
+// are managed via direct DOM manipulation through refs (not React state) so that
+// rapid hover/scroll events never trigger re-renders that could disturb scroll.
 const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProps, isMulti }) => {
   const { ddcSelectedOptions, ddcHideOptionsOnSelect, ddcSubmenuWidths } = selectProps;
+  const optionRef = useRef(null);
+  const submenuRef = useRef(null);
+  const hideTimeout = useRef(null);
 
   const isSelected = isMulti
     ? (ddcSelectedOptions || []).some(selected => JSON.stringify(selected) === JSON.stringify(data.value))
@@ -17,35 +26,66 @@ const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProp
 
   if (isSelected && ddcHideOptionsOnSelect) return null;
 
+  const hasSubmenu = data.suboptions && data.suboptions.length > 0;
   const submenuWidth = ddcSubmenuWidths ? { width: ddcSubmenuWidths[data.value.length - 1] } : {};
+
+  useEffect(() => () => clearTimeout(hideTimeout.current), []);
+
+  const showSubmenu = () => {
+    clearTimeout(hideTimeout.current);
+    if (!hasSubmenu || !optionRef.current || !submenuRef.current) return;
+    const rect = optionRef.current.getBoundingClientRect();
+    const sm = submenuRef.current;
+    sm.style.top = `${rect.top}px`;
+    sm.style.left = `${rect.right}px`;
+    sm.style.maxHeight = `${Math.min(300, window.innerHeight - rect.top - 8)}px`;
+    sm.style.display = 'block';
+  };
+
+  const scheduleHide = () => {
+    hideTimeout.current = setTimeout(() => {
+      if (submenuRef.current) submenuRef.current.style.display = 'none';
+    }, 200);
+  };
+
+  const cancelHide = () => clearTimeout(hideTimeout.current);
 
   return (
     <div
-      ref={innerRef}
+      ref={(el) => {
+        optionRef.current = el;
+        if (typeof innerRef === 'function') innerRef(el);
+        else if (innerRef) innerRef.current = el;
+      }}
       {...innerProps}
       className={isSelected ? "ddc-ml-option ddc-ml-option-is-selected" : "ddc-ml-option"}
+      onMouseEnter={showSubmenu}
+      onMouseLeave={scheduleHide}
       onClick={() => {
-        if (!data.suboptions) {
-          selectOption(data);
-        }
+        if (!hasSubmenu) selectOption(data);
       }}
     >
       <span style={{ flex: 1 }}>{data.label.at(-1)}</span>
-      {data.suboptions && data.suboptions.length > 0 && (
-        <>
-          <span className='ddc-ml-dropdown-arrow-right'>‣</span>
-          <div className="ddc-ml-submenu" style={submenuWidth}>
-            {data.suboptions.map((subOption) => (
-              <MultiLevelOption
-                key={JSON.stringify(subOption.value)}
-                data={subOption}
-                selectOption={selectOption}
-                selectProps={selectProps}
-                isMulti={isMulti}
-              />
-            ))}
-          </div>
-        </>
+      {hasSubmenu && <span className='ddc-ml-dropdown-arrow-right'>‣</span>}
+      {hasSubmenu && createPortal(
+        <div
+          ref={submenuRef}
+          className="ddc-ml-submenu"
+          style={submenuWidth}
+          onMouseEnter={cancelHide}
+          onMouseLeave={scheduleHide}
+        >
+          {data.suboptions.map((subOption) => (
+            <MultiLevelOption
+              key={JSON.stringify(subOption.value)}
+              data={subOption}
+              selectOption={selectOption}
+              selectProps={selectProps}
+              isMulti={isMulti}
+            />
+          ))}
+        </div>,
+        document.body
       )}
     </div>
   );
