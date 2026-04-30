@@ -10,41 +10,10 @@ const multi_options = [
           { value: 'gala', label: 'Gala' },
           { value: 'pinklady', label: 'Pink Lady' },
           { value: 'fuji', label: 'Fuji' },
-          { value: 'granny', label: 'Granny Smith' },
-          { value: 'honeycrisp', label: 'Honeycrisp' },
-          { value: 'braeburn', label: 'Braeburn' },
         ]
       },
       { value: 'orange', label: 'Orange' },
       { value: 'banana', label: 'Banana' },
-      { value: 'kiwi', label: 'Kiwi' },
-      { value: 'mango', label: 'Mango' },
-      { value: 'pineapple', label: 'Pineapple' },
-      { value: 'watermelon', label: 'Watermelon' },
-      { value: 'peach', label: 'Peach' },
-      { value: 'pear', label: 'Pear' },
-      { value: 'plum', label: 'Plum' },
-      { value: 'cherry', label: 'Cherry' },
-      { value: 'apricot', label: 'Apricot' },
-      { value: 'papaya', label: 'Papaya' },
-      { value: 'guava', label: 'Guava' },
-      { value: 'lychee', label: 'Lychee' },
-      { value: 'dragonfruit', label: 'Dragon Fruit' },
-      { value: 'passionfruit', label: 'Passion Fruit' },
-      { value: 'fig', label: 'Fig' },
-      { value: 'pomegranate', label: 'Pomegranate' },
-      { value: 'coconut', label: 'Coconut', suboptions: [
-          { value: 'young', label: 'Young Coconut' },
-          { value: 'mature', label: 'Mature Coconut' },
-          { value: 'king', label: 'King Coconut' },
-          { value: 'dwarf', label: 'Dwarf Coconut' },
-          { value: 'macapuno', label: 'Macapuno' },
-        ]
-      },
-      { value: 'starfruit', label: 'Star Fruit' },
-      { value: 'jackfruit', label: 'Jackfruit' },
-      { value: 'durian', label: 'Durian' },
-      { value: 'rambutan', label: 'Rambutan' },
     ],
   },
   {
@@ -53,33 +22,6 @@ const multi_options = [
     suboptions: [
       { value: 'carrot', label: 'Carrot' },
       { value: 'broccoli', label: 'Broccoli' },
-      { value: 'spinach', label: 'Spinach' },
-      { value: 'tomato', label: 'Tomato' },
-      { value: 'cucumber', label: 'Cucumber' },
-      { value: 'pepper', label: 'Pepper' },
-      { value: 'onion', label: 'Onion' },
-      { value: 'potato', label: 'Potato' },
-    ],
-  },
-  {
-    value: 'grains',
-    label: 'Grains',
-    suboptions: [
-      { value: 'wheat', label: 'Wheat' },
-      { value: 'rice', label: 'Rice' },
-      { value: 'oats', label: 'Oats' },
-      { value: 'barley', label: 'Barley' },
-      { value: 'corn', label: 'Corn' },
-    ],
-  },
-  {
-    value: 'dairy',
-    label: 'Dairy',
-    suboptions: [
-      { value: 'milk', label: 'Milk' },
-      { value: 'cheese', label: 'Cheese' },
-      { value: 'yogurt', label: 'Yogurt' },
-      { value: 'butter', label: 'Butter' },
     ],
   },
   {
@@ -89,30 +31,15 @@ const multi_options = [
 ];
 
 const options = [
-  { value: 'banana', label: 'Banana' },
   { value: 'apple', label: 'Apple' },
+  { value: 'banana', label: 'Banana' },
+  { value: 'orange', label: 'Orange' },
   { value: 'strawberry', label: 'Strawberry' },
   { value: 'kiwi', label: 'Kiwi' },
-  { value: 'orange', label: 'Orange' },
-  { value: 'blueberry', label: 'Blueberry' },
-  { value: 'lemon', label: 'Lemon' },
-  { value: 'lime', label: 'Lime' },
-  { value: 'mandarin', label: 'Mandarin' },
-  { value: 'mango', label: 'Mango' },
-  { value: 'pineapple', label: 'Pineapple' },
-  { value: 'watermelon', label: 'Watermelon' },
-  { value: 'grape', label: 'Grape' },
-  { value: 'peach', label: 'Peach' },
-  { value: 'pear', label: 'Pear' },
-  { value: 'plum', label: 'Plum' },
-  { value: 'cherry', label: 'Cherry' },
-  { value: 'apricot', label: 'Apricot' },
-  { value: 'papaya', label: 'Papaya' },
-  { value: 'guava', label: 'Guava' },
 ];
 
 const App = () => {
-  const [state, setState] = useState({ value: ['banana', 'apple'] });
+  const [state, setState] = useState({ value: ['apple', 'banana'] });
   const [stateMulti, setStateMulti] = useState({ value: [['fruits', 'banana']] });
   const [isMultiDropdown, setIsMultiDropdown] = useState(true);
   const [isMultiLevelDropdown, setIsMultiLevelDropdown] = useState(true);
@@ -136,7 +63,7 @@ const App = () => {
       <div style={dropdown_style}>
         <Dropdown clearable={true} options={options} multi={isMultiDropdown} setProps={setProps} {...state} />
         <p>Selected: {JSON.stringify(state.value)}</p>
-        <button onClick={() => setProps({ value: ['mango'] })}>Set to Mango</button>
+        <button onClick={() => setProps({ value: ['apple'] })}>Set to Apple</button>
         <div style={{ marginTop: '10px' }}>
           <label>
             <input type="checkbox" checked={isMultiDropdown} onChange={() => setIsMultiDropdown(p => !p)} /> Toggle Multi

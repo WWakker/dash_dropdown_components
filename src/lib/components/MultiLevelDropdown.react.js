@@ -149,6 +149,13 @@ const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProp
   );
 };
 
+const optionValueType = PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]);
+const optionShape = PropTypes.shape({
+    value: optionValueType.isRequired,
+    label: optionValueType.isRequired,
+    suboptions: PropTypes.arrayOf((...args) => optionShape(...args)),
+});
+
 // Defined outside the class so react-select never sees a new component type between renders.
 const customComponents = {
   DropdownIndicator,
@@ -264,32 +271,9 @@ MultiLevelDropdown.propTypes = {
     id: PropTypes.string,
     /**
      * An array of options {label: [string|number], value: [string|number]},
-     * with an optional suboptions key for nested levels.
+     * with an optional suboptions key for arbitrarily deep nested levels.
      */
-    options: PropTypes.arrayOf(PropTypes.shape({
-        value: PropTypes.oneOfType([
-                    PropTypes.string,
-                    PropTypes.number,
-                    PropTypes.bool,
-                    ]).isRequired,
-        label: PropTypes.oneOfType([
-                    PropTypes.string,
-                    PropTypes.number,
-                    PropTypes.bool,
-                    ]).isRequired,
-        suboptions: PropTypes.arrayOf(PropTypes.shape({
-          value: PropTypes.oneOfType([
-                    PropTypes.string,
-                    PropTypes.number,
-                    PropTypes.bool,
-                    ]).isRequired,
-          label: PropTypes.oneOfType([
-                    PropTypes.string,
-                    PropTypes.number,
-                    PropTypes.bool,
-                    ]).isRequired,
-        })),
-      })),
+    options: PropTypes.arrayOf((...args) => optionShape(...args)),
 
     /**
      * The value of the input. If multi is false (the default)
