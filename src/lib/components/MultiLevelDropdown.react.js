@@ -102,7 +102,7 @@ const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProp
         if (!hasSubmenu) selectOption(data);
       }}
     >
-      <span style={{ flex: 1 }}>{data.label.at(-1)}</span>
+      <span style={{ flex: 1 }}>{data.label[data.label.length - 1]}</span>
       {hasSubmenu && <span className='ddc-ml-dropdown-arrow-right'>‣</span>}
       {hasSubmenu && createPortal(
         <div
@@ -141,16 +141,12 @@ const customComponents = {
 class MultiLevelDropdown extends Component {
     constructor(props) {
         super(props);
+        this._lastOptions = props.options;
         this._nestedOptions = nestOptions(props.options || []);
         this._flattenedOptions = flattenOptions(this._nestedOptions);
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.options !== this.props.options) {
-            this._nestedOptions = nestOptions(this.props.options || []);
-            this._flattenedOptions = flattenOptions(this._nestedOptions);
-        }
-
         const { multi, setProps, value } = this.props;
         if (prevProps.multi !== multi) {
             let newValue = value;
@@ -196,6 +192,11 @@ class MultiLevelDropdown extends Component {
     };
 
     render() {
+        if (this.props.options !== this._lastOptions) {
+            this._lastOptions = this.props.options;
+            this._nestedOptions = nestOptions(this.props.options || []);
+            this._flattenedOptions = flattenOptions(this._nestedOptions);
+        }
         const sanitizedValue = sanitizeValueMultiLevel(this.props.value, this._flattenedOptions);
 
         return (
@@ -221,7 +222,7 @@ class MultiLevelDropdown extends Component {
                     classNamePrefix='ddc-ml-dropdown'
                     components={customComponents}
                     formatOptionLabel={(option, { context }) => {
-                        return context === "menu" ? option.label.at(-1) : option.label.join('>');
+                        return context === "menu" ? option.label[option.label.length - 1] : option.label.join('>');
                     }}
                     styles={colorStyles}
                     ddcSelectedOptions={this.props.value}
