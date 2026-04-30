@@ -60,7 +60,7 @@ const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProp
   const scheduleHide = () => {
     hideTimeout.current = setTimeout(() => {
       if (submenuRef.current) submenuRef.current.style.display = 'none';
-    }, 200);
+    }, 100);
   };
 
   const cancelHide = () => clearTimeout(hideTimeout.current);

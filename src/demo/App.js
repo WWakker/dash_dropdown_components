@@ -33,7 +33,14 @@ const multi_options = [
       { value: 'passionfruit', label: 'Passion Fruit' },
       { value: 'fig', label: 'Fig' },
       { value: 'pomegranate', label: 'Pomegranate' },
-      { value: 'coconut', label: 'Coconut' },
+      { value: 'coconut', label: 'Coconut', suboptions: [
+          { value: 'young', label: 'Young Coconut' },
+          { value: 'mature', label: 'Mature Coconut' },
+          { value: 'king', label: 'King Coconut' },
+          { value: 'dwarf', label: 'Dwarf Coconut' },
+          { value: 'macapuno', label: 'Macapuno' },
+        ]
+      },
       { value: 'starfruit', label: 'Star Fruit' },
       { value: 'jackfruit', label: 'Jackfruit' },
       { value: 'durian', label: 'Durian' },
