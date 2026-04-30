@@ -1,4 +1,4 @@
-import React, { Component, useRef, useEffect } from 'react';
+import React, { Component, useRef, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Select from 'react-select';
 import {isNil, pluck} from 'ramda';
@@ -20,6 +20,8 @@ const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProp
   const submenuRef = useRef(null);
   const hideTimeout = useRef(null);
   const scrollListener = useRef(null);
+  const [portalMounted, setPortalMounted] = useState(false);
+  const shouldShowOnMount = useRef(false);
 
   const detachScrollListener = () => {
     if (scrollListener.current) {
@@ -29,6 +31,7 @@ const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProp
   };
 
   const hideSubmenu = () => {
+    shouldShowOnMount.current = false;
     if (submenuRef.current) submenuRef.current.style.display = 'none';
     detachScrollListener();
   };
@@ -38,18 +41,8 @@ const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProp
     detachScrollListener();
   }, []);
 
-  const isSelected = isMulti
-    ? (ddcSelectedOptions || []).some(selected => JSON.stringify(selected) === JSON.stringify(data.value))
-    : JSON.stringify(ddcSelectedOptions) === JSON.stringify(data.value);
-
-  if (isSelected && ddcHideOptionsOnSelect) return null;
-
-  const hasSubmenu = data.suboptions && data.suboptions.length > 0;
-  const submenuWidth = ddcSubmenuWidths ? { width: ddcSubmenuWidths[data.value.length - 1] } : {};
-
-  const showSubmenu = () => {
-    clearTimeout(hideTimeout.current);
-    if (!hasSubmenu || !optionRef.current || !submenuRef.current) return;
+  const positionAndShow = () => {
+    if (!optionRef.current || !submenuRef.current) return;
     const rect = optionRef.current.getBoundingClientRect();
     const sm = submenuRef.current;
     const margin = 8;
@@ -81,6 +74,34 @@ const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProp
     window.addEventListener('scroll', scrollListener.current, true);
   };
 
+  // After the portal mounts for the first time, show it if the hover is still active.
+  useEffect(() => {
+    if (portalMounted && shouldShowOnMount.current) {
+      shouldShowOnMount.current = false;
+      positionAndShow();
+    }
+  }, [portalMounted]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const isSelected = isMulti
+    ? (ddcSelectedOptions || []).some(selected => JSON.stringify(selected) === JSON.stringify(data.value))
+    : JSON.stringify(ddcSelectedOptions) === JSON.stringify(data.value);
+
+  if (isSelected && ddcHideOptionsOnSelect) return null;
+
+  const hasSubmenu = data.suboptions && data.suboptions.length > 0;
+  const submenuWidth = ddcSubmenuWidths ? { width: ddcSubmenuWidths[data.value.length - 1] } : {};
+
+  const showSubmenu = () => {
+    clearTimeout(hideTimeout.current);
+    if (!hasSubmenu || !optionRef.current) return;
+    if (!portalMounted) {
+      shouldShowOnMount.current = true;
+      setPortalMounted(true);
+      return;
+    }
+    positionAndShow();
+  };
+
   const scheduleHide = () => {
     hideTimeout.current = setTimeout(hideSubmenu, 100);
   };
@@ -104,7 +125,7 @@ const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProp
     >
       <span style={{ flex: 1 }}>{data.label[data.label.length - 1]}</span>
       {hasSubmenu && <span className='ddc-ml-dropdown-arrow-right'>‣</span>}
-      {hasSubmenu && createPortal(
+      {portalMounted && createPortal(
         <div
           ref={submenuRef}
           className="ddc-ml-submenu"
