@@ -60,7 +60,6 @@ div .ddc-dropdown__input-container {
 .ddc-ml-submenu {
   display: none;
   position: fixed;
-  max-height: 300px;
   overflow-y: auto;
   box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1),0 4px 11px hsla(0, 0%, 0%, 0.1);
   background: white;

@@ -20,6 +20,8 @@ const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProp
   const submenuRef = useRef(null);
   const hideTimeout = useRef(null);
 
+  useEffect(() => () => clearTimeout(hideTimeout.current), []);
+
   const isSelected = isMulti
     ? (ddcSelectedOptions || []).some(selected => JSON.stringify(selected) === JSON.stringify(data.value))
     : JSON.stringify(ddcSelectedOptions) === JSON.stringify(data.value);
@@ -28,8 +30,6 @@ const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProp
 
   const hasSubmenu = data.suboptions && data.suboptions.length > 0;
   const submenuWidth = ddcSubmenuWidths ? { width: ddcSubmenuWidths[data.value.length - 1] } : {};
-
-  useEffect(() => () => clearTimeout(hideTimeout.current), []);
 
   const showSubmenu = () => {
     clearTimeout(hideTimeout.current);
@@ -119,7 +119,6 @@ const customComponents = {
 class MultiLevelDropdown extends Component {
     constructor(props) {
         super(props);
-        this.handleChange = this.handleChange.bind(this);
         this._nestedOptions = nestOptions(props.options || []);
         this._flattenedOptions = flattenOptions(this._nestedOptions);
     }
