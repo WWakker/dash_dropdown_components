@@ -19,8 +19,24 @@ const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProp
   const optionRef = useRef(null);
   const submenuRef = useRef(null);
   const hideTimeout = useRef(null);
+  const scrollListener = useRef(null);
 
-  useEffect(() => () => clearTimeout(hideTimeout.current), []);
+  const detachScrollListener = () => {
+    if (scrollListener.current) {
+      window.removeEventListener('scroll', scrollListener.current, true);
+      scrollListener.current = null;
+    }
+  };
+
+  const hideSubmenu = () => {
+    if (submenuRef.current) submenuRef.current.style.display = 'none';
+    detachScrollListener();
+  };
+
+  useEffect(() => () => {
+    clearTimeout(hideTimeout.current);
+    detachScrollListener();
+  }, []);
 
   const isSelected = isMulti
     ? (ddcSelectedOptions || []).some(selected => JSON.stringify(selected) === JSON.stringify(data.value))
@@ -56,12 +72,17 @@ const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProp
       left = Math.max(margin, window.innerWidth - width - margin);
     }
     sm.style.left = `${left}px`;
+
+    detachScrollListener();
+    scrollListener.current = (e) => {
+      if (submenuRef.current && submenuRef.current.contains(e.target)) return;
+      hideSubmenu();
+    };
+    window.addEventListener('scroll', scrollListener.current, true);
   };
 
   const scheduleHide = () => {
-    hideTimeout.current = setTimeout(() => {
-      if (submenuRef.current) submenuRef.current.style.display = 'none';
-    }, 100);
+    hideTimeout.current = setTimeout(hideSubmenu, 100);
   };
 
   const cancelHide = () => clearTimeout(hideTimeout.current);
