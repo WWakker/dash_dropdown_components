@@ -41,6 +41,7 @@ const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProp
     sm.style.top = `${rect.top}px`;
     sm.style.maxHeight = `${Math.min(300, window.innerHeight - rect.top - margin)}px`;
     sm.style.display = 'block';
+    sm.scrollTop = 0;
 
     const width = sm.offsetWidth;
     const fitsRight = rect.right + width <= window.innerWidth - margin;
