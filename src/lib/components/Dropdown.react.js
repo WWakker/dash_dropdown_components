@@ -75,7 +75,7 @@ class Dropdown extends Component {
         return (
             <div
                 id={this.props.id}
-                className="dash-dropdown"
+                className="ddc-dropdown"
                 style={this.props.style}
             >
                 <Select
