@@ -36,10 +36,25 @@ const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProp
     if (!hasSubmenu || !optionRef.current || !submenuRef.current) return;
     const rect = optionRef.current.getBoundingClientRect();
     const sm = submenuRef.current;
+    const margin = 8;
+
     sm.style.top = `${rect.top}px`;
-    sm.style.left = `${rect.right}px`;
-    sm.style.maxHeight = `${Math.min(300, window.innerHeight - rect.top - 8)}px`;
+    sm.style.maxHeight = `${Math.min(300, window.innerHeight - rect.top - margin)}px`;
     sm.style.display = 'block';
+
+    const width = sm.offsetWidth;
+    const fitsRight = rect.right + width <= window.innerWidth - margin;
+    const fitsLeft = rect.left - width >= margin;
+
+    let left;
+    if (fitsRight) {
+      left = rect.right;
+    } else if (fitsLeft) {
+      left = rect.left - width;
+    } else {
+      left = Math.max(margin, window.innerWidth - width - margin);
+    }
+    sm.style.left = `${left}px`;
   };
 
   const scheduleHide = () => {
