@@ -18,8 +18,29 @@ the selected value.
 - `disabled` (Bool; optional): If true, this dropdown is disabled and the selection cannot be changed.
 - `hide_options_on_select` (Bool; optional): If true, options are removed when selected.
 - `multi` (Bool; optional): If true, the user can select multiple values
-- `options` (Array; optional): An array of options. Each option is {label, value} and may include a
+- `options` (optional): An array of options. Each option is {label, value} and may include a
 nested `options` key, recursively, for arbitrarily deep submenus.
+Nesting deeper than 5 levels still works at runtime but is not
+described in this type signature.. options has the following type: Array of lists containing elements 'value', 'label', 'options'.
+Those elements have the following types:
+  - `value` (String | Real | Bool; required)
+  - `label` (String | Real | Bool; required)
+  - `options` (optional): . options has the following type: Array of lists containing elements 'value', 'label', 'options'.
+Those elements have the following types:
+  - `value` (String | Real | Bool; required)
+  - `label` (String | Real | Bool; required)
+  - `options` (optional): . options has the following type: Array of lists containing elements 'value', 'label', 'options'.
+Those elements have the following types:
+  - `value` (String | Real | Bool; required)
+  - `label` (String | Real | Bool; required)
+  - `options` (optional): . options has the following type: Array of lists containing elements 'value', 'label', 'options'.
+Those elements have the following types:
+  - `value` (String | Real | Bool; required)
+  - `label` (String | Real | Bool; required)
+  - `options` (optional): . options has the following type: Array of lists containing elements 'value', 'label'.
+Those elements have the following types:
+  - `value` (String | Real | Bool; required)
+  - `label` (String | Real | Bool; required)sssss
 - `placeholder` (String; optional): A placeholder in the dropdown input if no selection is made yet; default is 'Select...'
 - `style` (Dict; optional): Defines CSS styles which will override styles previously set.
 - `submenu_widths` (Array; optional): Control the width of the submenu for each level. Can be in percentage of the preceding level or fixed widths.

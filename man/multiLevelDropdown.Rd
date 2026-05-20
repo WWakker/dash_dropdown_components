@@ -33,8 +33,29 @@ the selected value.}
 
 \item{multi}{Logical. If true, the user can select multiple values}
 
-\item{options}{List. An array of options. Each option is {label, value} and may include a
-nested `options` key, recursively, for arbitrarily deep submenus.}
+\item{options}{List of lists containing elements 'value', 'label', 'options'.
+those elements have the following types:
+  - value (character | numeric | logical; required)
+  - label (character | numeric | logical; required)
+  - options (optional): . options has the following type: list of lists containing elements 'value', 'label', 'options'.
+those elements have the following types:
+  - value (character | numeric | logical; required)
+  - label (character | numeric | logical; required)
+  - options (optional): . options has the following type: list of lists containing elements 'value', 'label', 'options'.
+those elements have the following types:
+  - value (character | numeric | logical; required)
+  - label (character | numeric | logical; required)
+  - options (optional): . options has the following type: list of lists containing elements 'value', 'label', 'options'.
+those elements have the following types:
+  - value (character | numeric | logical; required)
+  - label (character | numeric | logical; required)
+  - options (optional): . options has the following type: list of lists containing elements 'value', 'label'.
+those elements have the following types:
+  - value (character | numeric | logical; required)
+  - label (character | numeric | logical; required)sssss. An array of options. Each option is {label, value} and may include a
+nested `options` key, recursively, for arbitrarily deep submenus.
+Nesting deeper than 5 levels still works at runtime but is not
+described in this type signature.}
 
 \item{placeholder}{Character. A placeholder in the dropdown input if no selection is made yet; default is 'Select...'}
 

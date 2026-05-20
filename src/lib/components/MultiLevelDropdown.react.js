@@ -149,13 +149,6 @@ const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProp
   );
 };
 
-const optionValueType = PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]);
-const optionShape = PropTypes.shape({
-    value: optionValueType.isRequired,
-    label: optionValueType.isRequired,
-    options: PropTypes.arrayOf((...args) => optionShape(...args)),
-});
-
 // Defined outside the class so react-select never sees a new component type between renders.
 const customComponents = {
   DropdownIndicator,
@@ -272,8 +265,29 @@ MultiLevelDropdown.propTypes = {
     /**
      * An array of options. Each option is {label, value} and may include a
      * nested `options` key, recursively, for arbitrarily deep submenus.
+     * Nesting deeper than 5 levels still works at runtime but is not
+     * described in this type signature.
      */
-    options: PropTypes.arrayOf((...args) => optionShape(...args)),
+    options: PropTypes.arrayOf(PropTypes.shape({
+        value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+        label: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+        options: PropTypes.arrayOf(PropTypes.shape({
+            value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+            label: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+            options: PropTypes.arrayOf(PropTypes.shape({
+                value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+                label: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+                options: PropTypes.arrayOf(PropTypes.shape({
+                    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+                    label: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+                    options: PropTypes.arrayOf(PropTypes.shape({
+                        value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+                        label: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+                    })),
+                })),
+            })),
+        })),
+    })),
 
     /**
      * The value of the input. If multi is false (the default)
