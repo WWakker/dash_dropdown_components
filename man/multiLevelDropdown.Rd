@@ -33,14 +33,8 @@ the selected value.}
 
 \item{multi}{Logical. If true, the user can select multiple values}
 
-\item{options}{List of lists containing elements 'value', 'label', 'options'.
-those elements have the following types:
-  - value (character | numeric | logical; required)
-  - label (character | numeric | logical; required)
-  - options (optional): . options has the following type: list of lists containing elements 'value', 'label'.
-those elements have the following types:
-  - value (character | numeric | logical; required)
-  - label (character | numeric | logical; required)ss. An array of options {label: [string|number], value: [string|number]},}
+\item{options}{List. An array of options {label: [string|number], value: [string|number]},
+with an optional suboptions key for arbitrarily deep nested levels.}
 
 \item{placeholder}{Character. A placeholder in the dropdown input if no selection is made yet; default is 'Select...'}
 

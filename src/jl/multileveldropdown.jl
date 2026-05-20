@@ -18,14 +18,8 @@ the selected value.
 - `disabled` (Bool; optional): If true, this dropdown is disabled and the selection cannot be changed.
 - `hide_options_on_select` (Bool; optional): If true, options are removed when selected.
 - `multi` (Bool; optional): If true, the user can select multiple values
-- `options` (optional): An array of options {label: [string|number], value: [string|number]},. options has the following type: Array of lists containing elements 'value', 'label', 'options'.
-Those elements have the following types:
-  - `value` (String | Real | Bool; required)
-  - `label` (String | Real | Bool; required)
-  - `options` (optional): . options has the following type: Array of lists containing elements 'value', 'label'.
-Those elements have the following types:
-  - `value` (String | Real | Bool; required)
-  - `label` (String | Real | Bool; required)ss
+- `options` (Array; optional): An array of options {label: [string|number], value: [string|number]},
+with an optional suboptions key for arbitrarily deep nested levels.
 - `placeholder` (String; optional): A placeholder in the dropdown input if no selection is made yet; default is 'Select...'
 - `style` (Dict; optional): Defines CSS styles which will override styles previously set.
 - `submenu_widths` (Array; optional): Control the width of the submenu for each level. Can be in percentage of the preceding level or fixed widths.

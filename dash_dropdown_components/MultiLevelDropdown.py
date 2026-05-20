@@ -32,23 +32,10 @@ Keyword arguments:
 - multi (boolean; default False):
     If True, the user can select multiple values.
 
-- options (list of dicts; optional):
+- options (list; optional):
     An array of options {label: [string|number], value:
-    [string|number]},.
-
-    `options` is a list of dicts with keys:
-
-    - value (string | number | boolean; required)
-
-    - label (string | number | boolean; required)
-
-    - options (list of dicts; optional)
-
-        `options` is a list of dicts with keys:
-
-        - value (string | number | boolean; required)
-
-        - label (string | number | boolean; required)
+    [string|number]}, with an optional suboptions key for arbitrarily
+    deep nested levels.
 
 - placeholder (string; default 'Select...'):
     A placeholder in the dropdown input if no selection is made yet;
