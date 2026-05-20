@@ -63,7 +63,7 @@ A hierarchical dropdown component that supports nested options (multilevel struc
 | Property                 | Type               | Description                                                                                                                                           |
 |--------------------------|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `id`                     | `string`           | Unique component ID                                                                                                                                   |
-| `options`                | `list[dict,str]`   | List of dicts of options with `label`, `value` and `suboptions` keys                                                                                  |
+| `options`                | `list[dict,str]`   | List of dicts of options with `label`, `value` and optional nested `options` keys (recursive)                                                         |
 | `value`                  | `string` or `list` | Selected value(s)                                                                                                                                     |
 | `multi`                  | `bool`             | Enable multiple selections                                                                                                                            |
 | `clearable`              | `bool`             | Whether or not the dropdown is "clearable", that is, whether or not a small "x" appears on the right of the dropdown that removes the selected value. |
@@ -100,12 +100,12 @@ multi_level_options = [
     {
         'label': 'Fruits',
         'value': 'fruits',
-        'suboptions': [
+        'options': [
             { 'label': 'Apple', 'value': 'apple' },
             { 'label': 'Banana', 'value': 'banana' },
             { 'label': 'Berries',
               'value': 'berries',
-              'suboptions': [
+              'options': [
                   { 'label': 'Strawberry', 'value': 'strawberry'},
                   { 'label': 'Blueberry', 'value': 'blueberry'}
                 ]
@@ -114,7 +114,7 @@ multi_level_options = [
     {
         'label': 'Vegetables',
         'value': 'vegetables',
-        'suboptions': [
+        'options': [
             {
             'label': 'Potato',
             'value': 'potato'

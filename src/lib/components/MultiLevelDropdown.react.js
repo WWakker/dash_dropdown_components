@@ -153,7 +153,7 @@ const optionValueType = PropTypes.oneOfType([PropTypes.string, PropTypes.number,
 const optionShape = PropTypes.shape({
     value: optionValueType.isRequired,
     label: optionValueType.isRequired,
-    suboptions: PropTypes.arrayOf((...args) => optionShape(...args)),
+    options: PropTypes.arrayOf((...args) => optionShape(...args)),
 });
 
 // Defined outside the class so react-select never sees a new component type between renders.
@@ -270,8 +270,8 @@ MultiLevelDropdown.propTypes = {
      */
     id: PropTypes.string,
     /**
-     * An array of options {label: [string|number], value: [string|number]},
-     * with an optional suboptions key for arbitrarily deep nested levels.
+     * An array of options. Each option is {label, value} and may include a
+     * nested `options` key, recursively, for arbitrarily deep submenus.
      */
     options: PropTypes.arrayOf((...args) => optionShape(...args)),
 

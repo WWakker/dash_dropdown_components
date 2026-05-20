@@ -33,9 +33,9 @@ Keyword arguments:
     If True, the user can select multiple values.
 
 - options (list; optional):
-    An array of options {label: [string|number], value:
-    [string|number]}, with an optional suboptions key for arbitrarily
-    deep nested levels.
+    An array of options. Each option is {label, value} and may include
+    a nested `options` key, recursively, for arbitrarily deep
+    submenus.
 
 - placeholder (string; default 'Select...'):
     A placeholder in the dropdown input if no selection is made yet;

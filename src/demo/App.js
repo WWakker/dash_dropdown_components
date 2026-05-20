@@ -5,8 +5,8 @@ const multi_options = [
   {
     value: 'fruits',
     label: 'Fruits',
-    suboptions: [
-      { value: 'apple', label: 'Apple', suboptions: [
+    options: [
+      { value: 'apple', label: 'Apple', options: [
           { value: 'gala', label: 'Gala' },
           { value: 'pinklady', label: 'Pink Lady' },
           { value: 'fuji', label: 'Fuji' },
@@ -19,7 +19,7 @@ const multi_options = [
   {
     value: 'vegetables',
     label: 'Vegetables',
-    suboptions: [
+    options: [
       { value: 'carrot', label: 'Carrot' },
       { value: 'broccoli', label: 'Broccoli' },
     ],

@@ -33,8 +33,8 @@ the selected value.}
 
 \item{multi}{Logical. If true, the user can select multiple values}
 
-\item{options}{List. An array of options {label: [string|number], value: [string|number]},
-with an optional suboptions key for arbitrarily deep nested levels.}
+\item{options}{List. An array of options. Each option is {label, value} and may include a
+nested `options` key, recursively, for arbitrarily deep submenus.}
 
 \item{placeholder}{Character. A placeholder in the dropdown input if no selection is made yet; default is 'Select...'}
 
