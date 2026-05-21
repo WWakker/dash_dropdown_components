@@ -19,12 +19,12 @@ multi_level_options = [
     {
         'label': 'Fruits',
         'value': 'fruits',
-        'suboptions': [
+        'options': [
             { 'label': 'Apple', 'value': 'apple' },
             { 'label': 'Banana', 'value': 'banana' },
             { 'label': 'Berries',
               'value': 'berries',
-              'suboptions': [
+              'options': [
                   { 'label': 'Strawberry', 'value': 'strawberry'},
                   { 'label': 'Blueberry', 'value': 'blueberry'}
                 ]
@@ -33,7 +33,7 @@ multi_level_options = [
     {
         'label': 'Vegetables',
         'value': 'vegetables',
-        'suboptions': [
+        'options': [
             {
             'label': 'Potato',
             'value': 'potato'

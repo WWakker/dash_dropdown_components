@@ -19,6 +19,9 @@ export const flattenOptions = (options) => {
   return result;
 }
 
+// Reads the user-facing `options` key on each input item, but writes the
+// internal `suboptions` key on the output. react-select treats any item with
+// an `options` array as a group, so we never let that key reach it.
 export const nestOptions = (options, parentValue = [], parentLabel = []) => {
   return options.map(option => {
     const currentValue = [...parentValue, option.value];
@@ -29,9 +32,8 @@ export const nestOptions = (options, parentValue = [], parentLabel = []) => {
       label: currentLabel,
     };
 
-    // If suboptions exist, recursively transform them
-    if (option.suboptions) {
-      result.suboptions = nestOptions(option.suboptions, currentValue, currentLabel);
+    if (option.options) {
+      result.suboptions = nestOptions(option.options, currentValue, currentLabel);
     }
 
     return result;

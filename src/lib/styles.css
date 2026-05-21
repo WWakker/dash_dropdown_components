@@ -37,7 +37,7 @@ div .ddc-dropdown__menu-list, div .ddc-ml-dropdown__menu-list {
 }
 
 div .ddc-ml-dropdown__menu-list {
-    overflow-y: visible;
+    overflow-y: auto;
 }
 
 div .ddc-dropdown__input-container {
@@ -53,26 +53,17 @@ div .ddc-dropdown__input-container {
   font-size: inherit;
 }
 
-.ddc-ml-option > .ddc-ml-submenu {
-  width: 100%;
-}
-
-.ddc-ml-option:hover > .ddc-ml-submenu {
-  display: block;
-}
-
 .ddc-ml-option:hover {
   background-color: #deebff;
 }
 
 .ddc-ml-submenu {
   display: none;
-  position: absolute;
-  top: 0;
-  left: 100%;
+  position: fixed;
+  overflow-y: auto;
   box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1),0 4px 11px hsla(0, 0%, 0%, 0.1);
   background: white;
-  z-index: 1000;
+  z-index: 9999;
   border-radius: 4px;
 }
 

@@ -33,8 +33,10 @@ Keyword arguments:
     If True, the user can select multiple values.
 
 - options (list of dicts; optional):
-    An array of options {label: [string|number], value:
-    [string|number]},.
+    An array of options. Each option is {label, value} and may include
+    a nested `options` key, recursively, for arbitrarily deep
+    submenus. Nesting deeper than 5 levels still works at runtime but
+    is not described in this type signature.
 
     `options` is a list of dicts with keys:
 
@@ -49,6 +51,30 @@ Keyword arguments:
         - value (string | number | boolean; required)
 
         - label (string | number | boolean; required)
+
+        - options (list of dicts; optional)
+
+            `options` is a list of dicts with keys:
+
+            - value (string | number | boolean; required)
+
+            - label (string | number | boolean; required)
+
+            - options (list of dicts; optional)
+
+                `options` is a list of dicts with keys:
+
+                - value (string | number | boolean; required)
+
+                - label (string | number | boolean; required)
+
+                - options (list of dicts; optional)
+
+                    `options` is a list of dicts with keys:
+
+                    - value (string | number | boolean; required)
+
+                    - label (string | number | boolean; required)
 
 - placeholder (string; default 'Select...'):
     A placeholder in the dropdown input if no selection is made yet;

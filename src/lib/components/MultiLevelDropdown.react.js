@@ -1,67 +1,159 @@
-import React, { Component, MouseEventHandler } from 'react';
-import Select, { components } from 'react-select';
-import {isNil, pluck, without, pick} from 'ramda';
+import React, { Component, useRef, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+import Select from 'react-select';
+import {isNil, pluck} from 'ramda';
 import PropTypes from 'prop-types';
-import { MdArrowRight } from "react-icons/md";
 import { flattenOptions, nestOptions, sanitizeValueMultiLevel } from '../utils/sanitizemultilevel'
 import { IndicatorSeparator, DropdownIndicator, colorStyles} from '../utils/helpers'
 import '../styles.css'
 
-// Recursive Component for Menu Items
-const MultiLevelOption = (props) => {
-  const { data, innerRef, innerProps, selectOption, ...rest } = props
-  const isSelected = props.isMulti ? props.selectedOptions.some(selected => JSON.stringify(selected) === JSON.stringify(data.value)): JSON.stringify(props.selectedOptions) === JSON.stringify(data.value)
+// Recursive component for menu items. Extra data arrives via selectProps to avoid
+// recreating a wrapper component type on every render (which causes full remounts).
+//
+// The submenu is rendered via React Portal at document.body so it escapes every
+// ancestor's stacking context, transform, and overflow. Visibility and position
+// are managed via direct DOM manipulation through refs (not React state) so that
+// rapid hover/scroll events never trigger re-renders that could disturb scroll.
+const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProps, isMulti }) => {
+  const { ddcSelectedOptions, ddcHideOptionsOnSelect, ddcSubmenuWidths } = selectProps;
+  const optionRef = useRef(null);
+  const submenuRef = useRef(null);
+  const hideTimeout = useRef(null);
+  const scrollListener = useRef(null);
+  const [portalMounted, setPortalMounted] = useState(false);
+  const shouldShowOnMount = useRef(false);
 
-  if (isSelected && props.hideOptionsOnSelect) return null
+  const detachScrollListener = () => {
+    if (scrollListener.current) {
+      window.removeEventListener('scroll', scrollListener.current, true);
+      scrollListener.current = null;
+    }
+  };
 
-  const submenuWidth = props.subMenuWidths ? {width: props.subMenuWidths[data.value.length - 1]} : {}
+  const hideSubmenu = () => {
+    shouldShowOnMount.current = false;
+    if (submenuRef.current) submenuRef.current.style.display = 'none';
+    detachScrollListener();
+  };
+
+  useEffect(() => () => {
+    clearTimeout(hideTimeout.current);
+    detachScrollListener();
+  }, []);
+
+  const positionAndShow = () => {
+    if (!optionRef.current || !submenuRef.current) return;
+    const rect = optionRef.current.getBoundingClientRect();
+    const sm = submenuRef.current;
+    const margin = 8;
+
+    sm.style.top = `${rect.top}px`;
+    sm.style.maxHeight = `${Math.min(300, window.innerHeight - rect.top - margin)}px`;
+    sm.style.display = 'block';
+    sm.scrollTop = 0;
+
+    const width = sm.offsetWidth;
+    const fitsRight = rect.right + width <= window.innerWidth - margin;
+    const fitsLeft = rect.left - width >= margin;
+
+    let left;
+    if (fitsRight) {
+      left = rect.right;
+    } else if (fitsLeft) {
+      left = rect.left - width;
+    } else {
+      left = Math.max(margin, window.innerWidth - width - margin);
+    }
+    sm.style.left = `${left}px`;
+
+    detachScrollListener();
+    scrollListener.current = (e) => {
+      if (submenuRef.current && submenuRef.current.contains(e.target)) return;
+      hideSubmenu();
+    };
+    window.addEventListener('scroll', scrollListener.current, true);
+  };
+
+  // After the portal mounts for the first time, show it if the hover is still active.
+  useEffect(() => {
+    if (portalMounted && shouldShowOnMount.current) {
+      shouldShowOnMount.current = false;
+      positionAndShow();
+    }
+  }, [portalMounted]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const isSelected = isMulti
+    ? (ddcSelectedOptions || []).some(selected => JSON.stringify(selected) === JSON.stringify(data.value))
+    : JSON.stringify(ddcSelectedOptions) === JSON.stringify(data.value);
+
+  if (isSelected && ddcHideOptionsOnSelect) return null;
+
+  const hasSubmenu = data.suboptions && data.suboptions.length > 0;
+  const submenuWidth = ddcSubmenuWidths ? { width: ddcSubmenuWidths[data.value.length - 1] } : {};
+
+  const showSubmenu = () => {
+    clearTimeout(hideTimeout.current);
+    if (!hasSubmenu || !optionRef.current) return;
+    if (!portalMounted) {
+      shouldShowOnMount.current = true;
+      setPortalMounted(true);
+      return;
+    }
+    positionAndShow();
+  };
+
+  const scheduleHide = () => {
+    hideTimeout.current = setTimeout(hideSubmenu, 100);
+  };
+
+  const cancelHide = () => clearTimeout(hideTimeout.current);
 
   return (
     <div
-      ref={innerRef}
+      ref={(el) => {
+        optionRef.current = el;
+        if (typeof innerRef === 'function') innerRef(el);
+        else if (innerRef) innerRef.current = el;
+      }}
       {...innerProps}
-      className={isSelected ? "ddc-ml-option ddc-ml-option-is-selected": "ddc-ml-option"}
-      onClick={(e) => {
-        if (!data.suboptions) {
-            selectOption(data);
-        }
+      className={isSelected ? "ddc-ml-option ddc-ml-option-is-selected" : "ddc-ml-option"}
+      onMouseEnter={showSubmenu}
+      onMouseLeave={scheduleHide}
+      onClick={() => {
+        if (!hasSubmenu) selectOption(data);
       }}
     >
-      <span style={{ flex: 1 }}>{String(data.label.slice(-1))}</span>
-      {data.suboptions && data.suboptions.length > 0 && (
-        <span className='ddc-ml-dropdown-arrow-right'>‣</span>
-      )}
-      {data.suboptions && data.suboptions.length > 0 && (
-        <div className="ddc-ml-submenu" style={submenuWidth}>
+      <span style={{ flex: 1 }}>{data.label[data.label.length - 1]}</span>
+      {hasSubmenu && <span className='ddc-ml-dropdown-arrow-right'>‣</span>}
+      {portalMounted && createPortal(
+        <div
+          ref={submenuRef}
+          className="ddc-ml-submenu"
+          style={submenuWidth}
+          onMouseEnter={cancelHide}
+          onMouseLeave={scheduleHide}
+        >
           {data.suboptions.map((subOption) => (
             <MultiLevelOption
-              key={subOption.value}
+              key={JSON.stringify(subOption.value)}
               data={subOption}
-              innerRef={innerRef}
-              innerProps={innerProps}
               selectOption={selectOption}
-              {...rest}
+              selectProps={selectProps}
+              isMulti={isMulti}
             />
           ))}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
 };
 
-const MultiLevelOptionWrapper = (selectedOptions, hideOptionsOnSelect, subMenuWidths) => (props) => {
-  return <MultiLevelOption {...props} selectedOptions={selectedOptions} hideOptionsOnSelect={hideOptionsOnSelect} subMenuWidths={subMenuWidths} />;
-};
-
-const CustomMenuList = (props) => {
-
-  return (
-    <components.MenuList {...props}>
-      {React.Children.map(props.children, (child) =>
-        React.cloneElement(child)
-      )}
-    </components.MenuList>
-  );
+// Defined outside the class so react-select never sees a new component type between renders.
+const customComponents = {
+  DropdownIndicator,
+  IndicatorSeparator,
+  Option: MultiLevelOption,
 };
 
 /**
@@ -70,14 +162,14 @@ const CustomMenuList = (props) => {
 class MultiLevelDropdown extends Component {
     constructor(props) {
         super(props);
-        this.handleChange = this.handleChange.bind(this);
+        this._lastOptions = props.options;
+        this._nestedOptions = nestOptions(props.options || []);
+        this._flattenedOptions = flattenOptions(this._nestedOptions);
     }
 
-    // Change value from item to list or reverse when multi changes
     componentDidUpdate(prevProps) {
         const { multi, setProps, value } = this.props;
         if (prevProps.multi !== multi) {
-
             let newValue = value;
             if (isNil(newValue) || (Array.isArray(newValue) && newValue.length === 0)) {
                 newValue = multi ? [] : null;
@@ -88,36 +180,32 @@ class MultiLevelDropdown extends Component {
                     return;
                 }
                 newValue = multi ? [newValue] : newValue[0];
-            };
+            }
 
             if (setProps) {
                 setProps({ value: newValue });
             }
-        };
-
+        }
     }
 
-    /**
-     * Handle the value change and communicate it to Dash via setProps.
-     */
     handleChange = (selectedOption) => {
         const { multi, setProps } = this.props;
 
         let newValue;
 
         if (multi) {
-                if (isNil(selectedOption) || (Array.isArray(selectedOption) && selectedOption.length === 0)) {
-                    newValue = [];
-                } else {
-                    newValue = pluck('value', selectedOption);
-                }
+            if (isNil(selectedOption) || (Array.isArray(selectedOption) && selectedOption.length === 0)) {
+                newValue = [];
+            } else {
+                newValue = pluck('value', selectedOption);
+            }
         } else {
             if (isNil(selectedOption)) {
                 newValue = null;
             } else {
                 newValue = selectedOption.value;
             }
-        };
+        }
 
         if (setProps) {
             setProps({ value: newValue });
@@ -125,26 +213,22 @@ class MultiLevelDropdown extends Component {
     };
 
     render() {
-
-        const nestedOptions = nestOptions(this.props.options)
-        const flattenedOptions = flattenOptions(nestedOptions)
-        const sanitizedValue = sanitizeValueMultiLevel(this.props.value, flattenedOptions)
-        const customComponents = {
-            DropdownIndicator: DropdownIndicator,
-            IndicatorSeparator: IndicatorSeparator,
-            Option: MultiLevelOptionWrapper(this.props.value, this.props.hide_options_on_select, this.props.submenu_widths),
-            MenuList: CustomMenuList,
+        if (this.props.options !== this._lastOptions) {
+            this._lastOptions = this.props.options;
+            this._nestedOptions = nestOptions(this.props.options || []);
+            this._flattenedOptions = flattenOptions(this._nestedOptions);
         }
+        const sanitizedValue = sanitizeValueMultiLevel(this.props.value, this._flattenedOptions);
 
         return (
-             <div
+            <div
                 id={this.props.id}
-                className="dash-dropdown"
+                className="ddc-dropdown"
                 style={this.props.style}
             >
                 <Select
                     isMulti={this.props.multi}
-                    options={nestedOptions}
+                    options={this._nestedOptions}
                     value={sanitizedValue}
                     onChange={this.handleChange}
                     placeholder={this.props.placeholder}
@@ -159,16 +243,18 @@ class MultiLevelDropdown extends Component {
                     classNamePrefix='ddc-ml-dropdown'
                     components={customComponents}
                     formatOptionLabel={(option, { context }) => {
-                        return context === "menu" ? option.label.slice(-1) : option.label.join('>');
+                        return context === "menu" ? option.label[option.label.length - 1] : option.label.join('>');
                     }}
                     styles={colorStyles}
+                    ddcSelectedOptions={this.props.value}
+                    ddcHideOptionsOnSelect={this.props.hide_options_on_select}
+                    ddcSubmenuWidths={this.props.submenu_widths}
                 />
             </div>
         );
     }
 }
 
-// PropTypes to enforce prop validation
 MultiLevelDropdown.propTypes = {
     /**
      * The ID of this component, used to identify dash components
@@ -177,32 +263,31 @@ MultiLevelDropdown.propTypes = {
      */
     id: PropTypes.string,
     /**
-     * An array of options {label: [string|number], value: [string|number]},
+     * An array of options. Each option is {label, value} and may include a
+     * nested `options` key, recursively, for arbitrarily deep submenus.
+     * Nesting deeper than 5 levels still works at runtime but is not
+     * described in this type signature.
      */
     options: PropTypes.arrayOf(PropTypes.shape({
-        value: PropTypes.oneOfType([
-                    PropTypes.string,
-                    PropTypes.number,
-                    PropTypes.bool,
-                    ]).isRequired,
-        label: PropTypes.oneOfType([
-                    PropTypes.string,
-                    PropTypes.number,
-                    PropTypes.bool,
-                    ]).isRequired,
+        value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+        label: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
         options: PropTypes.arrayOf(PropTypes.shape({
-          value: PropTypes.oneOfType([
-                    PropTypes.string,
-                    PropTypes.number,
-                    PropTypes.bool,
-                    ]).isRequired,
-          label: PropTypes.oneOfType([
-                    PropTypes.string,
-                    PropTypes.number,
-                    PropTypes.bool,
-                    ]).isRequired,
+            value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+            label: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+            options: PropTypes.arrayOf(PropTypes.shape({
+                value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+                label: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+                options: PropTypes.arrayOf(PropTypes.shape({
+                    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+                    label: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+                    options: PropTypes.arrayOf(PropTypes.shape({
+                        value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+                        label: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]).isRequired,
+                    })),
+                })),
+            })),
         })),
-      })),
+    })),
 
     /**
      * The value of the input. If multi is false (the default)
@@ -255,7 +340,7 @@ MultiLevelDropdown.propTypes = {
      */
     submenu_widths: PropTypes.array,
     /**
-     * Whether to enable the searching feature or not
+     * Dash-supplied function for updating props.
      */
     setProps: PropTypes.func,
     /**
