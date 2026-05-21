@@ -1,6 +1,18 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
+import typing  # noqa: F401
+from typing_extensions import TypedDict, NotRequired, Literal # noqa: F401
 from dash.development.base_component import Component, _explicitize_args
+
+ComponentSingleType = typing.Union[str, int, float, Component, None]
+ComponentType = typing.Union[
+    ComponentSingleType,
+    typing.Sequence[ComponentSingleType],
+]
+
+NumberType = typing.Union[
+    typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex
+]
 
 
 class Dropdown(Component):
@@ -68,21 +80,43 @@ Keyword arguments:
 - searchable (boolean; default True):
     Whether to enable the searching feature or not.
 
-- style (dict; optional):
-    Defines CSS styles which will override styles previously set.
-
 - value (string | number | boolean | list of string | number | booleans; optional):
     The value of the input. If `multi` is False (the default) then
     value is just a string that corresponds to the values provided in
     the `options` property. If `multi` is True, then multiple values
     can be selected at once, and `value` is an array of items with
     values corresponding to those in the `options` prop."""
-    _children_props = ['options[].label']
+    _children_props: typing.List[str] = ['options[].label']
     _base_nodes = ['children']
     _namespace = 'dash_dropdown_components'
     _type = 'Dropdown'
-    @_explicitize_args
-    def __init__(self, id=Component.UNDEFINED, options=Component.UNDEFINED, value=Component.UNDEFINED, multi=Component.UNDEFINED, clearable=Component.UNDEFINED, placeholder=Component.UNDEFINED, disabled=Component.UNDEFINED, hide_options_on_select=Component.UNDEFINED, searchable=Component.UNDEFINED, style=Component.UNDEFINED, className=Component.UNDEFINED, **kwargs):
+    Options = TypedDict(
+        "Options",
+            {
+            "label": ComponentType,
+            "value": typing.Union[str, NumberType, bool],
+            "disabled": NotRequired[bool],
+            "title": NotRequired[str],
+            "search": NotRequired[str]
+        }
+    )
+
+
+    def __init__(
+        self,
+        id: typing.Optional[typing.Union[str, dict]] = None,
+        options: typing.Optional[typing.Union[typing.Sequence[typing.Union[str, NumberType, bool]], dict, typing.Sequence["Options"]]] = None,
+        value: typing.Optional[typing.Union[str, NumberType, bool, typing.Sequence[typing.Union[str, NumberType, bool]]]] = None,
+        multi: typing.Optional[bool] = None,
+        clearable: typing.Optional[bool] = None,
+        placeholder: typing.Optional[str] = None,
+        disabled: typing.Optional[bool] = None,
+        hide_options_on_select: typing.Optional[bool] = None,
+        searchable: typing.Optional[bool] = None,
+        style: typing.Optional[typing.Any] = None,
+        className: typing.Optional[str] = None,
+        **kwargs
+    ):
         self._prop_names = ['id', 'className', 'clearable', 'disabled', 'hide_options_on_select', 'multi', 'options', 'placeholder', 'searchable', 'style', 'value']
         self._valid_wildcard_attributes =            []
         self.available_properties = ['id', 'className', 'clearable', 'disabled', 'hide_options_on_select', 'multi', 'options', 'placeholder', 'searchable', 'style', 'value']
@@ -93,3 +127,5 @@ Keyword arguments:
         args = {k: _locals[k] for k in _explicit_args}
 
         super(Dropdown, self).__init__(**args)
+
+setattr(Dropdown, "__init__", _explicitize_args(Dropdown.__init__))
