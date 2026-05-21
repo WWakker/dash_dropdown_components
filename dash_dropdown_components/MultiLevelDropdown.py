@@ -1,6 +1,18 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
+import typing  # noqa: F401
+from typing_extensions import TypedDict, NotRequired, Literal # noqa: F401
 from dash.development.base_component import Component, _explicitize_args
+
+ComponentSingleType = typing.Union[str, int, float, Component, None]
+ComponentType = typing.Union[
+    ComponentSingleType,
+    typing.Sequence[ComponentSingleType],
+]
+
+NumberType = typing.Union[
+    typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex
+]
 
 
 class MultiLevelDropdown(Component):
@@ -80,9 +92,6 @@ Keyword arguments:
     A placeholder in the dropdown input if no selection is made yet;
     default is 'Select...'.
 
-- style (dict; optional):
-    Defines CSS styles which will override styles previously set.
-
 - submenu_widths (list; optional):
     Control the width of the submenu for each level. Can be in
     percentage of the preceding level or fixed widths.
@@ -93,12 +102,70 @@ Keyword arguments:
     options property. If multi is True, then multiple values can be
     selected at once, and value is an array of items with values
     corresponding to those in the options prop."""
-    _children_props = []
+    _children_props: typing.List[str] = []
     _base_nodes = ['children']
     _namespace = 'dash_dropdown_components'
     _type = 'MultiLevelDropdown'
-    @_explicitize_args
-    def __init__(self, id=Component.UNDEFINED, options=Component.UNDEFINED, value=Component.UNDEFINED, multi=Component.UNDEFINED, clearable=Component.UNDEFINED, placeholder=Component.UNDEFINED, disabled=Component.UNDEFINED, hide_options_on_select=Component.UNDEFINED, submenu_widths=Component.UNDEFINED, style=Component.UNDEFINED, className=Component.UNDEFINED, **kwargs):
+    OptionsOptionsOptionsOptionsOptions = TypedDict(
+        "OptionsOptionsOptionsOptionsOptions",
+            {
+            "value": typing.Union[str, NumberType, bool],
+            "label": typing.Union[str, NumberType, bool]
+        }
+    )
+
+    OptionsOptionsOptionsOptions = TypedDict(
+        "OptionsOptionsOptionsOptions",
+            {
+            "value": typing.Union[str, NumberType, bool],
+            "label": typing.Union[str, NumberType, bool],
+            "options": NotRequired[typing.Sequence["OptionsOptionsOptionsOptionsOptions"]]
+        }
+    )
+
+    OptionsOptionsOptions = TypedDict(
+        "OptionsOptionsOptions",
+            {
+            "value": typing.Union[str, NumberType, bool],
+            "label": typing.Union[str, NumberType, bool],
+            "options": NotRequired[typing.Sequence["OptionsOptionsOptionsOptions"]]
+        }
+    )
+
+    OptionsOptions = TypedDict(
+        "OptionsOptions",
+            {
+            "value": typing.Union[str, NumberType, bool],
+            "label": typing.Union[str, NumberType, bool],
+            "options": NotRequired[typing.Sequence["OptionsOptionsOptions"]]
+        }
+    )
+
+    Options = TypedDict(
+        "Options",
+            {
+            "value": typing.Union[str, NumberType, bool],
+            "label": typing.Union[str, NumberType, bool],
+            "options": NotRequired[typing.Sequence["OptionsOptions"]]
+        }
+    )
+
+
+    def __init__(
+        self,
+        id: typing.Optional[typing.Union[str, dict]] = None,
+        options: typing.Optional[typing.Sequence["Options"]] = None,
+        value: typing.Optional[typing.Union[typing.Sequence[typing.Sequence[typing.Union[str, NumberType, bool]]], typing.Sequence[typing.Union[str, NumberType, bool]]]] = None,
+        multi: typing.Optional[bool] = None,
+        clearable: typing.Optional[bool] = None,
+        placeholder: typing.Optional[str] = None,
+        disabled: typing.Optional[bool] = None,
+        hide_options_on_select: typing.Optional[bool] = None,
+        submenu_widths: typing.Optional[typing.Sequence] = None,
+        style: typing.Optional[typing.Any] = None,
+        className: typing.Optional[str] = None,
+        **kwargs
+    ):
         self._prop_names = ['id', 'className', 'clearable', 'disabled', 'hide_options_on_select', 'multi', 'options', 'placeholder', 'style', 'submenu_widths', 'value']
         self._valid_wildcard_attributes =            []
         self.available_properties = ['id', 'className', 'clearable', 'disabled', 'hide_options_on_select', 'multi', 'options', 'placeholder', 'style', 'submenu_widths', 'value']
@@ -109,3 +176,5 @@ Keyword arguments:
         args = {k: _locals[k] for k in _explicit_args}
 
         super(MultiLevelDropdown, self).__init__(**args)
+
+setattr(MultiLevelDropdown, "__init__", _explicitize_args(MultiLevelDropdown.__init__))
