@@ -92,6 +92,14 @@ Keyword arguments:
     A placeholder in the dropdown input if no selection is made yet;
     default is 'Select...'.
 
+- submenu_max_width (string | number | list; optional):
+    Maximum width of the submenu(s), to stop submenus growing too wide
+    when option labels are long; labels wrap within this width.
+    Defaults to the width of the dropdown control. Accepts a single
+    CSS width applied to every level (e.g. '300px', '25vw', a number
+    read as px, or 'none' to disable), or a list for per-level
+    control.
+
 - submenu_widths (list; optional):
     Control the width of the submenu for each level. Can be in
     percentage of the preceding level or fixed widths.
@@ -162,13 +170,14 @@ Keyword arguments:
         disabled: typing.Optional[bool] = None,
         hide_options_on_select: typing.Optional[bool] = None,
         submenu_widths: typing.Optional[typing.Sequence] = None,
+        submenu_max_width: typing.Optional[typing.Union[str, NumberType, typing.Sequence]] = None,
         style: typing.Optional[typing.Any] = None,
         className: typing.Optional[str] = None,
         **kwargs
     ):
-        self._prop_names = ['id', 'className', 'clearable', 'disabled', 'hide_options_on_select', 'multi', 'options', 'placeholder', 'style', 'submenu_widths', 'value']
+        self._prop_names = ['id', 'className', 'clearable', 'disabled', 'hide_options_on_select', 'multi', 'options', 'placeholder', 'style', 'submenu_max_width', 'submenu_widths', 'value']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['id', 'className', 'clearable', 'disabled', 'hide_options_on_select', 'multi', 'options', 'placeholder', 'style', 'submenu_widths', 'value']
+        self.available_properties = ['id', 'className', 'clearable', 'disabled', 'hide_options_on_select', 'multi', 'options', 'placeholder', 'style', 'submenu_max_width', 'submenu_widths', 'value']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

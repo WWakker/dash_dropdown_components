@@ -5,6 +5,8 @@ To run:
     pytest tests/test_usage.py
 """
 
+import dash_dropdown_components as ddc
+from dash import Dash, html
 from dash.testing.application_runners import import_app
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
@@ -112,3 +114,78 @@ def test_multi_mode_keeps_menu_open(dash_duo):
         "You have entered [['fruits', 'banana'], ['fruits', 'apple']]",
     )
     assert dash_duo.find_element('#ddc-mldd .ddc-ml-dropdown__menu') is not None
+
+
+_LONG_LABEL = (
+    'A deliberately very long submenu label that must wrap onto multiple '
+    'lines once the submenu width is capped'
+)
+
+
+def _submenu_width_app(submenu_max_width=None, control_width='240px'):
+    """A minimal app with one parent whose submenu holds a short and a long
+    label, used to exercise the submenu width cap + label wrapping."""
+    app = Dash(__name__)
+    kwargs = {} if submenu_max_width is None else {'submenu_max_width': submenu_max_width}
+    app.layout = html.Div(
+        ddc.MultiLevelDropdown(
+            id='mldd',
+            options=[{
+                'label': 'Parent',
+                'value': 'parent',
+                'options': [
+                    {'label': 'Short', 'value': 'short'},
+                    {'label': _LONG_LABEL, 'value': 'long'},
+                ],
+            }],
+            style={'width': control_width},
+            **kwargs,
+        ),
+        # Wide outer container so an *uncapped* submenu would be free to stretch.
+        style={'width': '900px'},
+    )
+    return app
+
+
+def _open_parent_submenu(dash_duo):
+    dash_duo.find_element('#mldd .ddc-ml-dropdown__control').click()
+    parent = _wait_ml_option(dash_duo.driver, 'Parent')
+    ActionChains(dash_duo.driver).move_to_element(parent).perform()
+    return WebDriverWait(dash_duo.driver, 5).until(
+        lambda d: next(
+            (el for el in d.find_elements(By.CSS_SELECTOR, 'body > .ddc-ml-submenu')
+             if el.is_displayed()),
+            False,
+        )
+    )
+
+
+def _option_height(submenu, label):
+    for opt in submenu.find_elements(By.CSS_SELECTOR, '.ddc-ml-option'):
+        text = opt.text.strip()
+        if (label == 'Short' and text == 'Short') or (label == 'long' and text != 'Short'):
+            return opt.size['height']
+    raise AssertionError(f'option {label!r} not found in submenu')
+
+
+def test_submenu_defaults_max_width_to_control(dash_duo):
+    """Regression guard: with no submenu_max_width, a submenu is capped at the
+    control's width (~240px) rather than stretching to the long label's natural
+    width, and the long label wraps onto more than one line."""
+    dash_duo.start_server(_submenu_width_app(control_width='240px'))
+    submenu = _open_parent_submenu(dash_duo)
+
+    assert submenu.size['width'] <= 260, submenu.size
+    assert _option_height(submenu, 'long') > _option_height(submenu, 'Short')
+
+    severe = [e for e in dash_duo.get_logs() or [] if e.get('level') == 'SEVERE']
+    assert not severe, f'Unexpected browser console errors: {severe}'
+
+
+def test_submenu_max_width_prop_caps_width(dash_duo):
+    """submenu_max_width overrides the default cap with an explicit width."""
+    dash_duo.start_server(_submenu_width_app(submenu_max_width='130px'))
+    submenu = _open_parent_submenu(dash_duo)
+
+    assert submenu.size['width'] <= 145, submenu.size
+    assert _option_height(submenu, 'long') > _option_height(submenu, 'Short')

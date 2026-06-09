@@ -15,7 +15,7 @@ import '../styles.css'
 // are managed via direct DOM manipulation through refs (not React state) so that
 // rapid hover/scroll events never trigger re-renders that could disturb scroll.
 const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProps, isMulti }) => {
-  const { ddcSelectedOptions, ddcHideOptionsOnSelect, ddcSubmenuWidths } = selectProps;
+  const { ddcSelectedOptions, ddcHideOptionsOnSelect, ddcSubmenuWidths, ddcSubmenuMaxWidth, ddcRootRef } = selectProps;
   const optionRef = useRef(null);
   const submenuRef = useRef(null);
   const hideTimeout = useRef(null);
@@ -51,6 +51,22 @@ const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProp
     sm.style.maxHeight = `${Math.min(300, window.innerHeight - rect.top - margin)}px`;
     sm.style.display = 'block';
     sm.scrollTop = 0;
+
+    // Cap submenu width: explicit submenu_max_width (scalar or per-level array) wins; otherwise
+    // don't clamp an explicit submenu_widths; otherwise default to the main control's width.
+    // Pass submenu_max_width='none' to disable the cap.
+    const level = data.value.length - 1;
+    let maxWidth;
+    if (!isNil(ddcSubmenuMaxWidth)) {
+      maxWidth = Array.isArray(ddcSubmenuMaxWidth) ? ddcSubmenuMaxWidth[level] : ddcSubmenuMaxWidth;
+    }
+    const hasExplicitWidth = ddcSubmenuWidths && !isNil(ddcSubmenuWidths[level]);
+    if (isNil(maxWidth) && !hasExplicitWidth && ddcRootRef && ddcRootRef.current) {
+      maxWidth = ddcRootRef.current.getBoundingClientRect().width;
+    }
+    if (!isNil(maxWidth)) {
+      sm.style.maxWidth = typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth;
+    }
 
     const width = sm.offsetWidth;
     const fitsRight = rect.right + width <= window.innerWidth - margin;
@@ -123,7 +139,7 @@ const MultiLevelOption = ({ data, innerRef, innerProps, selectOption, selectProp
         if (!hasSubmenu) selectOption(data);
       }}
     >
-      <span style={{ flex: 1 }}>{data.label[data.label.length - 1]}</span>
+      <span className="ddc-ml-option-label">{data.label[data.label.length - 1]}</span>
       {hasSubmenu && <span className='ddc-ml-dropdown-arrow-right'>‣</span>}
       {portalMounted && createPortal(
         <div
@@ -162,6 +178,7 @@ const customComponents = {
 class MultiLevelDropdown extends Component {
     constructor(props) {
         super(props);
+        this.rootRef = React.createRef();
         this._lastOptions = props.options;
         this._nestedOptions = nestOptions(props.options || []);
         this._flattenedOptions = flattenOptions(this._nestedOptions);
@@ -222,6 +239,7 @@ class MultiLevelDropdown extends Component {
 
         return (
             <div
+                ref={this.rootRef}
                 id={this.props.id}
                 className="ddc-dropdown"
                 style={this.props.style}
@@ -249,6 +267,8 @@ class MultiLevelDropdown extends Component {
                     ddcSelectedOptions={this.props.value}
                     ddcHideOptionsOnSelect={this.props.hide_options_on_select}
                     ddcSubmenuWidths={this.props.submenu_widths}
+                    ddcSubmenuMaxWidth={this.props.submenu_max_width}
+                    ddcRootRef={this.rootRef}
                 />
             </div>
         );
@@ -339,6 +359,13 @@ MultiLevelDropdown.propTypes = {
      * Control the width of the submenu for each level. Can be in percentage of the preceding level or fixed widths.
      */
     submenu_widths: PropTypes.array,
+    /**
+     * Maximum width of the submenu(s), to stop submenus growing too wide when option
+     * labels are long; labels wrap within this width. Defaults to the width of the
+     * dropdown control. Accepts a single CSS width applied to every level (e.g. '300px',
+     * '25vw', a number read as px, or 'none' to disable), or a list for per-level control.
+     */
+    submenu_max_width: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array]),
     /**
      * Dash-supplied function for updating props.
      */

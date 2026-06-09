@@ -30,6 +30,7 @@ div .ddc-dropdown__indicator:hover, div .ddc-ml-dropdown__indicator:hover {
     max-height: 14px;
     align-items: center;
     display: flex;
+    flex-shrink: 0;
 }
 
 div .ddc-dropdown__menu-list, div .ddc-ml-dropdown__menu-list {
@@ -55,6 +56,12 @@ div .ddc-dropdown__input-container {
 
 .ddc-ml-option:hover {
   background-color: #deebff;
+}
+
+.ddc-ml-option-label {
+  flex: 1;
+  min-width: 0;              /* let the flex item shrink so text can wrap */
+  overflow-wrap: break-word; /* break very long unbreakable tokens too */
 }
 
 .ddc-ml-submenu {

@@ -12,8 +12,8 @@ A dropdown similar to dcc.Dropdown but with multiple levels, where the menu stay
 \usage{
 multiLevelDropdown(id=NULL, className=NULL, clearable=NULL, disabled=NULL,
 hide_options_on_select=NULL, multi=NULL, options=NULL,
-placeholder=NULL, style=NULL, submenu_widths=NULL,
-value=NULL)
+placeholder=NULL, style=NULL, submenu_max_width=NULL,
+submenu_widths=NULL, value=NULL)
 }
 
 \arguments{
@@ -60,6 +60,11 @@ described in this type signature.}
 \item{placeholder}{Character. A placeholder in the dropdown input if no selection is made yet; default is 'Select...'}
 
 \item{style}{Named list. Defines CSS styles which will override styles previously set.}
+
+\item{submenu_max_width}{Character | numeric | unnamed list. Maximum width of the submenu(s), to stop submenus growing too wide when option
+labels are long; labels wrap within this width. Defaults to the width of the
+dropdown control. Accepts a single CSS width applied to every level (e.g. '300px',
+'25vw', a number read as px, or 'none' to disable), or a list for per-level control.}
 
 \item{submenu_widths}{Unnamed list. Control the width of the submenu for each level. Can be in percentage of the preceding level or fixed widths.}
 

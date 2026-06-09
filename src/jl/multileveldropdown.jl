@@ -43,6 +43,10 @@ Those elements have the following types:
   - `label` (String | Real | Bool; required)sssss
 - `placeholder` (String; optional): A placeholder in the dropdown input if no selection is made yet; default is 'Select...'
 - `style` (Dict; optional): Defines CSS styles which will override styles previously set.
+- `submenu_max_width` (String | Real | Array; optional): Maximum width of the submenu(s), to stop submenus growing too wide when option
+labels are long; labels wrap within this width. Defaults to the width of the
+dropdown control. Accepts a single CSS width applied to every level (e.g. '300px',
+'25vw', a number read as px, or 'none' to disable), or a list for per-level control.
 - `submenu_widths` (Array; optional): Control the width of the submenu for each level. Can be in percentage of the preceding level or fixed widths.
 - `value` (Array of Array of String | Real | Boolss | Array of String | Real | Bools; optional): The value of the input. If multi is false (the default)
 then value is just a string that corresponds to the values
@@ -52,7 +56,7 @@ array of items with values corresponding to those in the
 options prop.
 """
 function multileveldropdown(; kwargs...)
-        available_props = Symbol[:id, :className, :clearable, :disabled, :hide_options_on_select, :multi, :options, :placeholder, :style, :submenu_widths, :value]
+        available_props = Symbol[:id, :className, :clearable, :disabled, :hide_options_on_select, :multi, :options, :placeholder, :style, :submenu_max_width, :submenu_widths, :value]
         wild_props = Symbol[]
         return Component("multileveldropdown", "MultiLevelDropdown", "dash_dropdown_components", available_props, wild_props; kwargs...)
 end

@@ -26,7 +26,8 @@ multi_level_options = [
               'value': 'berries',
               'options': [
                   { 'label': 'Strawberry', 'value': 'strawberry'},
-                  { 'label': 'Blueberry', 'value': 'blueberry'}
+                  { 'label': 'Blueberry', 'value': 'blueberry'},
+                  { 'label': 'Berry with very long label', 'value': 'berry_long'},
                 ]
             }
     ]},
@@ -77,7 +78,6 @@ html.Div([
             multi=False,
             disabled=False,
             hide_options_on_select=True,
-            submenu_widths=['10vw', '20vw']
         ),
         html.Div(id='ddc-mldd-selection')
     ], style={'width': '25%', 'display': 'inline-block'}),
