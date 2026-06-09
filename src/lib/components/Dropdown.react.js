@@ -94,6 +94,7 @@ class Dropdown extends Component {
                     className={this.props.className}
                     classNamePrefix='ddc-dropdown'
                     components={customComponents}
+                    menuPortalTarget={document.body}
                     styles={{
                         ...colorStyles,
                     }}

@@ -113,7 +113,9 @@ def test_multi_mode_keeps_menu_open(dash_duo):
         '#ddc-mldd-selection',
         "You have entered [['fruits', 'banana'], ['fruits', 'apple']]",
     )
-    assert dash_duo.find_element('#ddc-mldd .ddc-ml-dropdown__menu') is not None
+    # The menu renders in a body-level portal (menuPortalTarget), so it is no longer a
+    # descendant of #ddc-mldd; locate it globally instead.
+    assert dash_duo.find_element('.ddc-ml-dropdown__menu') is not None
 
 
 _LONG_LABEL = (
@@ -189,3 +191,77 @@ def test_submenu_max_width_prop_caps_width(dash_duo):
 
     assert submenu.size['width'] <= 145, submenu.size
     assert _option_height(submenu, 'long') > _option_height(submenu, 'Short')
+
+
+def _topmost_at_option_center(driver, option):
+    """Return 'MENU' if the topmost painted element at the option's viewport centre
+    belongs to the dropdown menu, else 'OTHER:<hint>'. Discriminates whether the menu
+    is actually painting on top / unclipped at that point."""
+    return driver.execute_script(
+        """
+        const opt = arguments[0];
+        const r = opt.getBoundingClientRect();
+        let cur = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+        while (cur) {
+          const c = (typeof cur.className === 'string') ? cur.className : '';
+          if (c.indexOf('ddc-dropdown__option') !== -1 || c.indexOf('ddc-dropdown__menu') !== -1) {
+            return 'MENU';
+          }
+          cur = cur.parentElement;
+        }
+        const el = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+        return 'OTHER:' + (el ? (el.id || (typeof el.className === 'string' ? el.className : el.tagName)) : 'null');
+        """,
+        option,
+    )
+
+
+def _wait_option(dash_duo, label):
+    return WebDriverWait(dash_duo.driver, 5).until(
+        EC.visibility_of_element_located((
+            By.XPATH,
+            f"//div[contains(@class, 'ddc-dropdown__option')][normalize-space(text())='{label}']",
+        ))
+    )
+
+
+def test_menu_paints_above_higher_zindex_sibling(dash_duo):
+    """The menu is portaled to body, so it paints above a sibling overlay with a higher
+    z-index even when the dropdown sits in its own (lower) stacking context -- the case a
+    plain z-index bump on the inline menu could not fix."""
+    app = Dash(__name__)
+    app.layout = html.Div([
+        html.Div(
+            ddc.Dropdown(id='dd', options=['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'],
+                         value='Apple'),
+            style={'position': 'relative', 'zIndex': 1, 'width': '300px'},
+        ),
+        html.Div('overlay', id='overlay', style={
+            'position': 'fixed', 'top': '60px', 'left': '0',
+            'width': '500px', 'height': '600px', 'zIndex': 1000,
+            'background': 'rgba(255, 0, 0, 0.4)',
+        }),
+    ])
+    dash_duo.start_server(app)
+
+    dash_duo.find_element('#dd .ddc-dropdown__control').click()
+    banana = _wait_option(dash_duo, 'Banana')  # centre sits under the overlay region
+    assert _topmost_at_option_center(dash_duo.driver, banana) == 'MENU', \
+        _topmost_at_option_center(dash_duo.driver, banana)
+
+
+def test_menu_not_clipped_by_overflow_hidden(dash_duo):
+    """The portaled menu escapes an ancestor overflow:hidden clip: an option below the
+    clipping container still paints (would be invisible if rendered inline)."""
+    app = Dash(__name__)
+    app.layout = html.Div(
+        ddc.Dropdown(id='dd', options=['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'],
+                     value='Apple'),
+        style={'overflow': 'hidden', 'height': '40px', 'width': '300px'},
+    )
+    dash_duo.start_server(app)
+
+    dash_duo.find_element('#dd .ddc-dropdown__control').click()
+    cherry = _wait_option(dash_duo, 'Cherry')  # well below the 40px clipping container
+    assert _topmost_at_option_center(dash_duo.driver, cherry) == 'MENU', \
+        _topmost_at_option_center(dash_duo.driver, cherry)

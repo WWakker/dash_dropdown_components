@@ -260,6 +260,7 @@ class MultiLevelDropdown extends Component {
                     className={this.props.className}
                     classNamePrefix='ddc-ml-dropdown'
                     components={customComponents}
+                    menuPortalTarget={document.body}
                     formatOptionLabel={(option, { context }) => {
                         return context === "menu" ? option.label[option.label.length - 1] : option.label.join('>');
                     }}

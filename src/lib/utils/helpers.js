@@ -21,6 +21,9 @@ export const DropdownIndicator = (props) => {
 };
 
 export const colorStyles = {
+  // Render the menu in a body-level portal (set via menuPortalTarget on the Select) above page
+  // content. Kept below the MultiLevelDropdown submenu (.ddc-ml-submenu, z-index 9999).
+  menuPortal: (base) => ({ ...base, zIndex: 9998 }),
   multiValue: (styles, { data }) => {
     return {
       ...styles,
