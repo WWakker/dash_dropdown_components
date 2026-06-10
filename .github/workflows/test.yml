@@ -27,6 +27,9 @@ jobs:
           npm ci
           python -m pip install --upgrade pip
           pip install -r tests/requirements.txt
+          # Separate call on purpose: dash's testing extra pins selenium<=4.2.0
+          # (stale), making a joint resolve impossible (see tests/requirements.txt).
+          pip install --upgrade "selenium>=4.15"
       # Building on Linux also guards against case-sensitive import paths
       # that a macOS checkout would not catch.
       - name: Build bundle and backends

@@ -1,8 +1,11 @@
 # Packages needed to run the tests (and `npm run build:backends` via the dev extra).
-# Switch into a virtual environment, then:
-# pip install -r tests/requirements.txt
 #
+# NOTE: selenium must be upgraded in a SECOND pip call, not listed here:
+#   pip install -r tests/requirements.txt
+#   pip install --upgrade "selenium>=4.15"
+# dash's testing extra carries a stale selenium<=4.2.0 upper bound, so resolving
+# dash[testing] together with a modern selenium is impossible for pip — but modern
+# Chrome/chromedriver needs selenium>=4.15, and dash.testing works fine with it.
 # dash.testing older than v4 fails against modern Chrome/chromedriver.
 
 dash[dev,testing]>=4.0.0
-selenium>=4.15
