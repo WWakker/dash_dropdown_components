@@ -43,7 +43,7 @@ A customizable dropdown component that enhances the standard Dash dropdown with 
 | `placeholder`            | `string`           | Placeholder text when nothing is selected                                                                                                             |
 | `disabled`               | `bool`             | If True, this dropdown is disabled and the selection cannot be changed.                                                                               |
 | `hide_options_on_select` | `bool`             | If True, options are removed when selected                                                                                                            |
-| `style`                  | `bool`             | Whether dropdown closes on selection (default `True`)                                                                                                 |
+| `style`                  | `dict`             | Inline CSS styles applied to the dropdown container                                                                                                   |
 | `className`              | `string`           | Optional CSS class for styling                                                                                                                        |
 
 ---
@@ -72,7 +72,7 @@ A hierarchical dropdown component that supports nested options (multilevel struc
 | `hide_options_on_select` | `bool`             | If True, options are removed when selected                                                                                                            |
 | `submenu_widths`         | `list`             | Control the width of the submenu for each level. Can be in percentage of the preceding level or fixed widths                                          |
 | `submenu_max_width`      | `string`/`number`/`list` | Maximum width of submenus, so they don't grow too wide when labels are long; long labels wrap within this width. Defaults to the dropdown control's width. A single CSS width for all levels (e.g. `'300px'`, `'25vw'`, a number as px, or `'none'` to disable), or a list for per-level control. |
-| `style`                  | `bool`             | Whether dropdown closes on selection (default `True`)                                                                                                 |
+| `style`                  | `dict`             | Inline CSS styles applied to the dropdown container                                                                                                   |
 | `className`              | `string`           | Optional CSS class for styling                                                                                                                        |
 
 ---
@@ -202,5 +202,5 @@ This project is licensed under the **MIT License**. See the [LICENSE](./LICENSE)
 
 ## 🔗 Links
 
-- [GitHub Repository](https://github.com/WWakker/dash_dropdown_components)
+- [GitHub Repository](https://github.com/WWakker/dash-dropdown-components)
 - [Dash Documentation](https://dash.plotly.com/)

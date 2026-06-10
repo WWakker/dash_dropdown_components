@@ -1,8 +1,8 @@
-import React, { Component, MouseEventHandler, useRef, useEffect, useState } from 'react';
-import Select, { components } from 'react-select';
-import {isNil, pluck, without, pick} from 'ramda';
+import React, { Component } from 'react';
+import Select from 'react-select';
+import {isNil, pluck} from 'ramda';
 import PropTypes from 'prop-types';
-import { sanitizeOptions, sanitizeValue } from '../utils/Sanitize'
+import { sanitizeOptions, sanitizeValue } from '../utils/sanitize'
 import { IndicatorSeparator, DropdownIndicator, colorStyles} from '../utils/helpers'
 import '../styles.css'
 
@@ -89,7 +89,7 @@ class Dropdown extends Component {
                     isClearable={this.props.clearable ?? this.props.multi}
                     closeMenuOnSelect={!this.props.multi}
                     blurInputOnSelect={!this.props.multi}
-                    backspaceRemoves={this.props.clearable ?? this.props.multi}
+                    backspaceRemovesValue={this.props.clearable ?? this.props.multi}
                     hideSelectedOptions={this.props.hide_options_on_select}
                     className={this.props.className}
                     classNamePrefix='ddc-dropdown'
@@ -159,21 +159,6 @@ Dropdown.propTypes = {
                  * If true, this option is disabled and cannot be selected.
                  */
                 disabled: PropTypes.bool,
-
-                /**
-                 * The HTML 'title' attribute for the option. Allows for
-                 * information on hover. For more information on this attribute,
-                 * see https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/title
-                 */
-                title: PropTypes.string,
-
-                /**
-                 * Optional search value for the option, to use if the label
-                 * is a component or provide a custom search value different
-                 * from the label. If no search value and the label is a
-                 * component, the `value` will be used for search.
-                 */
-                search: PropTypes.string,
             })
         ),
     ]),

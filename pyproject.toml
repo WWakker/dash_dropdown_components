@@ -1,0 +1,5 @@
+# Metadata stays dynamic in setup.py because name/version/author flow from
+# package.json (the single source of truth, see CLAUDE.md build flow).
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

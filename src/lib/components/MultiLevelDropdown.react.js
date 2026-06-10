@@ -255,7 +255,7 @@ class MultiLevelDropdown extends Component {
                     isClearable={this.props.clearable ?? this.props.multi}
                     closeMenuOnSelect={!this.props.multi}
                     blurInputOnSelect={!this.props.multi}
-                    backspaceRemoves={this.props.clearable ?? this.props.multi}
+                    backspaceRemovesValue={this.props.clearable ?? this.props.multi}
                     hideSelectedOptions={false}
                     className={this.props.className}
                     classNamePrefix='ddc-ml-dropdown'

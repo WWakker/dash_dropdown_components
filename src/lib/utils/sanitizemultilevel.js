@@ -1,6 +1,4 @@
-// https://github.com/plotly/dash/blob/dev/components/dash-core-components/src/utils/optionTypes.js
-import React from 'react';
-import {type, isNil} from 'ramda';
+import {isNil} from 'ramda';
 
 export const flattenOptions = (options) => {
   const result = [];
@@ -47,8 +45,11 @@ export const sanitizeValueMultiLevel = (value, sanitizedOptions) => {
     if (isNil(value)) {
         result = null;
     } else if (value.some(element => Array.isArray(element))) {
+        // Drop values that no longer exist in options (e.g. after a callback
+        // swaps options) instead of passing undefined entries to react-select.
         result = value
-        .map(criteria => sanitizedOptions.find(item => JSON.stringify(item.value) === JSON.stringify(criteria)));
+        .map(criteria => sanitizedOptions.find(item => JSON.stringify(item.value) === JSON.stringify(criteria)))
+        .filter(item => !isNil(item));
     } else {
         result = sanitizedOptions.filter(item => JSON.stringify(item.value) === JSON.stringify(value));
     };

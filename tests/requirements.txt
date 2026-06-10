@@ -1,5 +1,8 @@
-# Packages needed to run the tests.
-# Switch into a virtual environment
-# pip install -r requirements.txt
+# Packages needed to run the tests (and `npm run build:backends` via the dev extra).
+# Switch into a virtual environment, then:
+# pip install -r tests/requirements.txt
+#
+# dash.testing older than v4 fails against modern Chrome/chromedriver.
 
-dash[dev,testing]>=1.15.0
+dash[dev,testing]>=4.0.0
+selenium>=4.15

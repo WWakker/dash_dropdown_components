@@ -61,18 +61,6 @@ Keyword arguments:
     - disabled (boolean; optional):
         If True, this option is disabled and cannot be selected.
 
-    - title (string; optional):
-        The HTML 'title' attribute for the option. Allows for
-        information on hover. For more information on this attribute,
-        see
-        https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/title.
-
-    - search (string; optional):
-        Optional search value for the option, to use if the label is a
-        component or provide a custom search value different from the
-        label. If no search value and the label is a component, the
-        `value` will be used for search.
-
 - placeholder (string; default 'Select...'):
     A placeholder in the dropdown input if no selection is made yet;
     default is 'Select...'.
@@ -95,9 +83,7 @@ Keyword arguments:
             {
             "label": ComponentType,
             "value": typing.Union[str, NumberType, bool],
-            "disabled": NotRequired[bool],
-            "title": NotRequired[str],
-            "search": NotRequired[str]
+            "disabled": NotRequired[bool]
         }
     )
 

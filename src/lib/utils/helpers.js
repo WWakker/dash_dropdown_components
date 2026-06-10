@@ -1,12 +1,8 @@
-import React, { Component, MouseEventHandler } from 'react';
+import React from 'react';
 import { components } from 'react-select';
 import { MdArrowDropUp, MdArrowDropDown } from "react-icons/md";
 
-export const IndicatorSeparator = ({
-  innerProps,
-}) => {
-  return null;
-};
+export const IndicatorSeparator = () => null;
 
 export const DropdownIndicator = (props) => {
   return (

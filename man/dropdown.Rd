@@ -32,20 +32,13 @@ the selected value.}
 
 \item{multi}{Logical. If true, the user can select multiple values}
 
-\item{options}{List of character | numeric | logicals | named list | list of lists containing elements 'label', 'value', 'disabled', 'title', 'search'.
+\item{options}{List of character | numeric | logicals | named list | list of lists containing elements 'label', 'value', 'disabled'.
 those elements have the following types:
   - label (a list of or a singular dash component, string or number; required): the option's label
   - value (character | numeric | logical; required): the value of the option. this value
 corresponds to the items specified in the
 `value` property.
-  - disabled (logical; optional): if true, this option is disabled and cannot be selected.
-  - title (character; optional): the html 'title' attribute for the option. allows for
-information on hover. for more information on this attribute,
-see https://developer.mozilla.org/en-us/docs/web/html/global_attributes/title
-  - search (character; optional): optional search value for the option, to use if the label
-is a component or provide a custom search value different
-from the label. if no search value and the label is a
-component, the `value` will be used for search.s. An array of options {label: [string|number], value: [string|number]},}
+  - disabled (logical; optional): if true, this option is disabled and cannot be selected.s. An array of options {label: [string|number], value: [string|number]},}
 
 \item{placeholder}{Character. A placeholder in the dropdown input if no selection is made yet; default is 'Select...'}
 

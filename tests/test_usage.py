@@ -6,7 +6,7 @@ To run:
 """
 
 import dash_dropdown_components as ddc
-from dash import Dash, html
+from dash import Dash, html, Input, Output
 from dash.testing.application_runners import import_app
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
@@ -265,3 +265,56 @@ def test_menu_not_clipped_by_overflow_hidden(dash_duo):
     cherry = _wait_option(dash_duo, 'Cherry')  # well below the 40px clipping container
     assert _topmost_at_option_center(dash_duo.driver, cherry) == 'MENU', \
         _topmost_at_option_center(dash_duo.driver, cherry)
+
+
+def test_dropdown_dict_options(dash_duo):
+    """Regression guard: dict-form options ({value: label}) render as a flat
+    option list (sanitizeOptions used to wrap each entry in an extra array,
+    which react-select cannot render)."""
+    app = Dash(__name__)
+    app.layout = html.Div([
+        ddc.Dropdown(id='dd', options={'mtl': 'Montreal', 'nyc': 'New York'}),
+        html.Div(id='dd-selection'),
+    ])
+
+    @app.callback(Output('dd-selection', 'children'), Input('dd', 'value'))
+    def show(value):
+        return f'value={value}'
+
+    dash_duo.start_server(app)
+
+    dash_duo.find_element('#dd .ddc-dropdown__control').click()
+    _wait_option(dash_duo, 'Montreal').click()
+
+    dash_duo.wait_for_text_to_equal('#dd-selection', 'value=mtl')
+
+    severe = [e for e in dash_duo.get_logs() or [] if e.get('level') == 'SEVERE']
+    assert not severe, f'Unexpected browser console errors: {severe}'
+
+
+def test_multileveldropdown_ignores_missing_value(dash_duo):
+    """Regression guard: a multi value no longer present in options is dropped
+    instead of reaching react-select as undefined (which crashed
+    formatOptionLabel when it read option.label)."""
+    app = Dash(__name__)
+    app.layout = html.Div(
+        ddc.MultiLevelDropdown(
+            id='mldd',
+            multi=True,
+            options=[{
+                'label': 'Fruits',
+                'value': 'fruits',
+                'options': [{'label': 'Apple', 'value': 'apple'}],
+            }],
+            value=[['fruits', 'apple'], ['gone', 'missing']],
+        ),
+    )
+    dash_duo.start_server(app)
+
+    # The surviving value renders as a chip; the missing one is dropped silently.
+    dash_duo.wait_for_text_to_equal(
+        '#mldd .ddc-ml-dropdown__multi-value__label', 'Fruits>Apple',
+    )
+
+    severe = [e for e in dash_duo.get_logs() or [] if e.get('level') == 'SEVERE']
+    assert not severe, f'Unexpected browser console errors: {severe}'

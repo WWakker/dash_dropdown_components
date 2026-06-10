@@ -18,20 +18,13 @@ the selected value.
 - `disabled` (Bool; optional): If true, this dropdown is disabled and the selection cannot be changed.
 - `hide_options_on_select` (Bool; optional): If true, options are removed when selected.
 - `multi` (Bool; optional): If true, the user can select multiple values
-- `options` (optional): An array of options {label: [string|number], value: [string|number]},. options has the following type: Array of String | Real | Bools | Dict | Array of lists containing elements 'label', 'value', 'disabled', 'title', 'search'.
+- `options` (optional): An array of options {label: [string|number], value: [string|number]},. options has the following type: Array of String | Real | Bools | Dict | Array of lists containing elements 'label', 'value', 'disabled'.
 Those elements have the following types:
   - `label` (a list of or a singular dash component, string or number; required): The option's label
   - `value` (String | Real | Bool; required): The value of the option. This value
 corresponds to the items specified in the
 `value` property.
-  - `disabled` (Bool; optional): If true, this option is disabled and cannot be selected.
-  - `title` (String; optional): The HTML 'title' attribute for the option. Allows for
-information on hover. For more information on this attribute,
-see https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/title
-  - `search` (String; optional): Optional search value for the option, to use if the label
-is a component or provide a custom search value different
-from the label. If no search value and the label is a
-component, the `value` will be used for search.s
+  - `disabled` (Bool; optional): If true, this option is disabled and cannot be selected.s
 - `placeholder` (String; optional): A placeholder in the dropdown input if no selection is made yet; default is 'Select...'
 - `searchable` (Bool; optional): Whether to enable the searching feature or not
 - `style` (Dict; optional): Defines CSS styles which will override styles previously set.
