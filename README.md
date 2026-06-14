@@ -1,4 +1,7 @@
+[![PyPI version](https://img.shields.io/pypi/v/dash-dropdown-components)](https://pypi.org/project/dash-dropdown-components/)
 [![PyPI Downloads](https://static.pepy.tech/badge/dash-dropdown-components)](https://pepy.tech/projects/dash-dropdown-components)
+[![Tests](https://img.shields.io/github/actions/workflow/status/WWakker/dash_dropdown_components/test.yml?branch=main&label=tests)](https://github.com/WWakker/dash_dropdown_components/actions/workflows/test.yml)
+[![License: MIT](https://img.shields.io/github/license/WWakker/dash_dropdown_components)](https://github.com/WWakker/dash_dropdown_components/blob/main/LICENSE)
 
 # 📦 dash_dropdown_components
 
